@@ -3,289 +3,1098 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Design Selector 🎀</title>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;700&display=swap" rel="stylesheet">
+<title>Nath 🎀</title>
+<link href="https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Nunito:wght@300;400;600&family=Special+Elite&display=swap" rel="stylesheet">
 <style>
-  * { margin: 0; padding: 0; box-sizing: border-box; }
+* { margin:0; padding:0; box-sizing:border-box; }
 
-  body {
-    min-height: 100vh;
-    background: #0d0d0d;
-    font-family: 'Space Grotesk', sans-serif;
-    color: white;
-    padding: 3rem 2rem;
-  }
+:root {
+  --bubblegum: #ff85a1;
+  --cotton: #ffd6e3;
+  --cream: #fff9fb;
+  --dark: #3d1c2e;
+  --accent: #ff4d77;
+  /* Dynamic tint that shifts with noCount */
+  --tint-h: 340;
+  --tint-s: 80%;
+  --tint-l: 90%;
+}
 
-  header {
-    text-align: center;
-    margin-bottom: 3rem;
-  }
+/* ── CURSOR ─────────────────────────────────────────────────────────────── */
+* { cursor: none !important; }
 
-  header h1 {
-    font-size: clamp(1.5rem, 4vw, 2.5rem);
-    font-weight: 700;
-    letter-spacing: -0.02em;
-    margin-bottom: 0.5rem;
-  }
+#cursor-dot {
+  position: fixed;
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--accent);
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%, -50%);
+  transition: background 0.4s;
+}
 
-  header p {
-    color: rgba(255,255,255,0.4);
-    font-size: 0.9rem;
-    font-weight: 300;
-  }
+#cursor-ring {
+  position: fixed;
+  width: 38px; height: 38px;
+  border-radius: 50%;
+  border: 2px solid rgba(255,133,161,0.7);
+  pointer-events: none;
+  z-index: 9998;
+  transform: translate(-50%, -50%);
+  /* lag behind cursor */
+  transition: left 0.12s ease-out, top 0.12s ease-out, border-color 0.8s, background 0.8s;
+  animation: ringPulseColor 5s ease-in-out infinite;
+  background: rgba(255,214,227,0.08);
+}
 
-  .badge {
-    display: inline-block;
-    background: rgba(255,45,120,0.15);
-    border: 1px solid rgba(255,45,120,0.4);
-    color: #ff2d78;
-    font-size: 0.7rem;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    padding: 0.3rem 0.8rem;
-    border-radius: 50px;
-    margin-bottom: 1rem;
-  }
+@keyframes ringPulseColor {
+  0%   { border-color: rgba(255,182,201,0.6); box-shadow: 0 0 10px rgba(255,182,201,0.2); }
+  16%  { border-color: rgba(255,255,255,0.5); box-shadow: 0 0 10px rgba(255,255,255,0.1); }
+  33%  { border-color: rgba(255,154,176,0.7); box-shadow: 0 0 10px rgba(255,154,176,0.25); }
+  50%  { border-color: rgba(255,220,235,0.6); box-shadow: 0 0 14px rgba(255,220,235,0.3); }
+  66%  { border-color: rgba(255,133,161,0.7); box-shadow: 0 0 10px rgba(255,133,161,0.3); }
+  83%  { border-color: rgba(255,240,245,0.5); box-shadow: 0 0 10px rgba(255,240,245,0.1); }
+  100% { border-color: rgba(255,182,201,0.6); box-shadow: 0 0 10px rgba(255,182,201,0.2); }
+}
 
-  .grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 1.5rem;
-    max-width: 1200px;
-    margin: 0 auto;
-  }
+body {
+  min-height: 100vh;
+  background: var(--cream);
+  font-family: 'Nunito', sans-serif;
+  color: var(--dark);
+  overflow: hidden;
+  transition: background 0.6s, color 0.6s;
+}
 
-  .card {
-    background: #161616;
-    border: 1px solid #2a2a2a;
-    border-radius: 12px;
-    overflow: hidden;
-    transition: all 0.3s ease;
-    cursor: pointer;
-    text-decoration: none;
-    color: inherit;
-    display: block;
-  }
+/* ── STICKERS ──────────────────────────────────────────────────────────── */
+.sticker {
+  position: fixed;
+  pointer-events: none; user-select: none;
+  animation: wiggle 3s ease-in-out infinite;
+  z-index: 5;
+}
+.sticker:nth-child(1) { top:5%;   left:3%;   font-size:3rem;   animation-delay:0s;   }
+.sticker:nth-child(2) { top:8%;   right:5%;  font-size:2.5rem; animation-delay:0.5s; }
+.sticker:nth-child(3) { bottom:15%;left:5%;  font-size:2rem;   animation-delay:1s;   }
+.sticker:nth-child(4) { bottom:10%;right:6%; font-size:2.8rem; animation-delay:1.5s; }
+.sticker:nth-child(5) { top:40%;  left:1%;   font-size:1.8rem; animation-delay:0.8s; }
+.sticker:nth-child(6) { top:35%;  right:2%;  font-size:1.8rem; animation-delay:1.2s; }
+@keyframes wiggle {
+  0%,100%{transform:rotate(-5deg) scale(1)}
+  50%{transform:rotate(5deg) scale(1.1)}
+}
 
-  .card:hover {
-    border-color: #ff2d78;
-    transform: translateY(-4px);
-    box-shadow: 0 12px 40px rgba(255,45,120,0.15);
-  }
+/* ── PETALS — slow smooth drift, behind everything ──────────────────────── */
+.petals-layer {
+  position: fixed; inset:0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+.petal {
+  position: absolute;
+  background: linear-gradient(135deg, #ffb6cc, #ff85a1);
+  border-radius: 50% 0 50% 0;
+  animation: petalFall ease-in-out infinite;
+}
+@keyframes petalFall {
+  0%   { transform: translateY(-40px) rotate(0deg)   translateX(0px);   opacity:0; }
+  8%   { opacity: 1; }
+  40%  { transform: translateY(38vh)  rotate(160deg) translateX(20px); }
+  75%  { transform: translateY(78vh)  rotate(310deg) translateX(-8px);  opacity:0.9; }
+  92%  { opacity: 0.6; }
+  100% { transform: translateY(110vh) rotate(440deg) translateX(12px);  opacity:0; }
+}
 
-  .preview {
-    height: 200px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-    overflow: hidden;
-    font-size: 4rem;
-  }
+/* ── DECO BG IMAGES — 20-25% opacity, behind content ───────────────────── */
+.bg-deco {
+  position: fixed; inset:0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+.bg-deco img {
+  position: absolute;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 3px solid rgba(255,133,161,0.12);
+  opacity: 0.22;
+  animation: bgFloat ease-in-out infinite;
+}
+.bg-deco img:nth-child(1) { width:155px;height:155px; top:2%;   left:0%;  animation-duration:10s; animation-delay:0s;   }
+.bg-deco img:nth-child(2) { width:115px;height:115px; top:4%;   right:1%; animation-duration:13s; animation-delay:1.5s; }
+.bg-deco img:nth-child(3) { width:135px;height:135px; bottom:7%;left:1%;  animation-duration:11s; animation-delay:3s;   }
+.bg-deco img:nth-child(4) { width:125px;height:125px; bottom:4%;right:0%; animation-duration:14s; animation-delay:1s;   }
+@keyframes bgFloat {
+  0%,100%{ transform: translateY(0)    rotate(-4deg) scale(1);    }
+  50%    { transform: translateY(-20px) rotate(4deg)  scale(1.04); }
+}
 
-  .card:nth-child(1) .preview {
-    background: linear-gradient(135deg, #fde8f0, #ffc8dc);
-  }
+/* ── BUBBLES ─────────────────────────────────────────────────────────── */
+.bg-bubbles { position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:0; }
+.bubble {
+  position:absolute; border-radius:50%;
+  background: radial-gradient(circle at 30% 30%, rgba(255,210,230,0.5), rgba(255,133,161,0.08));
+  animation: floatBubble linear infinite;
+}
+@keyframes floatBubble {
+  0%  { transform:translateY(100vh) scale(0); opacity:0; }
+  10% { opacity:0.35; }
+  90% { opacity:0.15; }
+  100%{ transform:translateY(-20px) scale(1); opacity:0; }
+}
 
-  .card:nth-child(2) .preview {
-    background: linear-gradient(135deg, #fff5f8, #ffd6e3);
-  }
+/* ── IMAGE PETALS (success) — slow, translucent, behind UI ──────────── */
+.img-petal {
+  position:fixed; pointer-events:none;
+  z-index: 101;          /* above success bg but below ticket/text (z:110+) */
+  border-radius:50%; object-fit:cover;
+  border:2px solid rgba(255,255,255,0.6);
+  box-shadow: 0 3px 10px rgba(255,133,161,0.15);
+  animation: imgPetalFall ease-in-out forwards;
+  opacity:0;
+}
+@keyframes imgPetalFall {
+  0%   { transform: translateY(-80px) rotate(0deg)   scale(0.5); opacity:0; }
+  8%   { opacity: 0.28; }
+  50%  { opacity: 0.22; }
+  88%  { opacity: 0.18; }
+  100% { transform: translateY(112vh) rotate(520deg) scale(1.0); opacity:0; }
+}
 
-  .card:nth-child(3) .preview {
-    background: linear-gradient(135deg, #ffe0ec, #ff85a1);
-  }
+/* ── MAIN LAYOUT ──────────────────────────────────────────────────────── */
+.main-wrapper {
+  position:relative; z-index:10;
+  min-height:100vh;
+  display:flex; align-items:center; justify-content:center;
+  padding:1.5rem;
+}
 
-  .card:nth-child(4) .preview {
-    background: linear-gradient(135deg, #f7eef3, #e8a0b8);
-  }
+/* ── CARD ─────────────────────────────────────────────────────────────── */
+.card {
+  background: white;
+  border-radius:30px; padding:0;
+  max-width:480px; width:100%;
+  box-shadow:
+    0 0 0 3px var(--bubblegum),
+    0 0 0 6px white,
+    0 0 0 9px var(--cotton),
+    0 20px 60px rgba(255,133,161,0.25);
+  overflow:hidden;
+  transition: box-shadow 0.5s;
+  position: relative;
+  z-index: 10;
+}
 
-  .card:nth-child(5) .preview {
-    background: linear-gradient(135deg, #1a0a12, #3d0020);
-  }
+.card-header {
+  background: linear-gradient(135deg, var(--bubblegum), var(--accent));
+  padding:1.8rem 2rem; text-align:center; position:relative;
+  transition: background 0.5s;
+}
+.card-header::after {
+  content:'';
+  position:absolute; bottom:-20px; left:0; right:0; height:40px;
+  background:white;
+  border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+}
+.card-header h1 {
+  font-family:'Abril Fatface',serif;
+  font-size:clamp(2rem,6vw,2.8rem);
+  color:white;
+  text-shadow:3px 3px 0 rgba(180,40,80,0.3);
+  letter-spacing:-0.02em;
+}
+.card-header p {
+  color:rgba(255,255,255,0.9); font-size:0.85rem;
+  font-weight:300; margin-top:0.4rem;
+  font-style:italic; line-height:1.5;
+}
 
-  .preview-label {
-    position: absolute;
-    top: 12px;
-    left: 12px;
-    background: rgba(0,0,0,0.3);
-    backdrop-filter: blur(8px);
-    padding: 0.3rem 0.7rem;
-    border-radius: 50px;
-    font-size: 0.7rem;
-    font-weight: 500;
-    letter-spacing: 0.1em;
-    color: white;
-  }
+.card-body { padding:2.5rem 2rem 0; text-align:center; }
 
-  .card-body {
-    padding: 1.2rem 1.5rem 1.5rem;
-  }
+.img-container { position:relative; display:inline-block; margin-bottom:1.2rem; }
+.main-img {
+  width:clamp(140px,35vw,200px); height:clamp(140px,35vw,200px);
+  object-fit:cover; border-radius:50%;
+  border:5px solid var(--cotton);
+  box-shadow:0 8px 32px rgba(255,133,161,0.3);
+  display:block;
+  transition: border-color 0.5s;
+}
+.main-img.bounce { animation:bounceImg 0.5s ease; }
+@keyframes bounceImg {
+  0%{transform:scale(1)}30%{transform:scale(0.85)}60%{transform:scale(1.1)}100%{transform:scale(1)}
+}
+.img-badge {
+  position:absolute; bottom:5px; right:5px;
+  background:var(--accent); color:white;
+  width:36px; height:36px; border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  font-size:1.1rem; border:3px solid white;
+  box-shadow:0 2px 8px rgba(255,77,119,0.4);
+}
 
-  .card-title {
-    font-size: 1.1rem;
-    font-weight: 700;
-    margin-bottom: 0.4rem;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-  }
+.question {
+  font-size:clamp(0.95rem,2.5vw,1.15rem); font-weight:600;
+  color:var(--dark); margin-bottom:1.5rem;
+  min-height:3em; line-height:1.5;
+  transition: color 0.4s;
+  padding:0 0.5rem;
+}
 
-  .card-desc {
-    font-size: 0.82rem;
-    color: rgba(255,255,255,0.45);
-    line-height: 1.5;
-    margin-bottom: 1rem;
-    font-weight: 300;
-  }
+/* btns row — ghost placeholder keeps the layout stable */
+.btns {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  position: relative;
+}
 
-  .tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.4rem;
-  }
+/* invisible ghost that holds the space of the NO button */
+.btn-no-ghost {
+  display: inline-block;
+  padding: 0.85rem 2.2rem;
+  font-size: 1rem;
+  visibility: hidden;
+  pointer-events: none;
+  flex-shrink: 0;
+}
 
-  .tag {
-    background: rgba(255,255,255,0.06);
-    border: 1px solid rgba(255,255,255,0.1);
-    padding: 0.2rem 0.6rem;
-    border-radius: 50px;
-    font-size: 0.7rem;
-    color: rgba(255,255,255,0.5);
-  }
+.btn-yes {
+  background:linear-gradient(135deg,var(--bubblegum),var(--accent));
+  color:white; border:none;
+  padding:0.85rem 2.2rem; border-radius:50px;
+  font-family:'Nunito',sans-serif; font-size:1rem; font-weight:700;
+  cursor:none !important;
+  box-shadow:0 4px 0 #cc2255, 0 6px 16px rgba(255,77,119,0.3);
+  transition:all 0.2s; letter-spacing:0.03em;
+}
+.btn-yes:active { transform:translateY(3px); box-shadow:0 1px 0 #cc2255; }
+.btn-yes:hover  { transform:translateY(-2px); }
 
-  .open-btn {
-    display: flex;
-    align-items: center;
-    gap: 0.4rem;
-    color: #ff2d78;
-    font-size: 0.8rem;
-    font-weight: 500;
-    margin-top: 0.8rem;
-    letter-spacing: 0.05em;
-  }
+/* NO BUTTON
+   Starts as position:fixed but invisible+centered so first jump
+   also gets the smooth transition. Becomes visible on mount via JS. */
+.btn-no {
+  background:white; color:var(--bubblegum);
+  border:2px solid var(--cotton);
+  padding:0.85rem 2.2rem; border-radius:50px;
+  font-family:'Nunito',sans-serif; font-size:1rem; font-weight:600;
+  cursor:none !important;
+  box-shadow:0 4px 0 var(--cotton);
+  letter-spacing:0.03em;
+  position: fixed;
+  z-index: 50;
+  /* start offscreen so first transition animates nicely */
+  left: -500px; top: -500px;
+  transition: left 0.55s cubic-bezier(0.45,0,0.55,1),
+              top  0.55s cubic-bezier(0.45,0,0.55,1),
+              color 0.4s, border-color 0.4s, background 0.4s, box-shadow 0.2s,
+              opacity 0.3s;
+  opacity: 0;
+}
+.btn-no.ready {
+  opacity: 1;
+}
+.btn-no.frozen {
+  transition: left 1.8s cubic-bezier(0.25,0.46,0.45,0.94),
+              top  1.8s cubic-bezier(0.25,0.46,0.45,0.94),
+              opacity 0.3s !important;
+}
 
-  .open-btn svg {
-    width: 14px;
-    height: 14px;
-    transition: transform 0.2s;
-  }
+/* IMG STRIP */
+.img-strip { display:flex; justify-content:center; gap:0.8rem; padding:1.2rem 0 0; }
+.img-strip img {
+  width:clamp(38px,8vw,52px); height:clamp(38px,8vw,52px);
+  object-fit:cover; border-radius:50%; border:2px solid var(--cotton);
+  opacity:0.7; transition:all 0.3s;
+}
+.img-strip img:hover { opacity:1; transform:scale(1.15) rotate(-5deg); }
 
-  .card:hover .open-btn svg { transform: translate(3px, -3px); }
+/* TICKER TAPE */
+.ticker-wrap {
+  overflow:hidden;
+  background:linear-gradient(135deg,var(--cotton),#ffcad6);
+  border-top:1px solid rgba(255,133,161,0.2);
+  padding:0.55rem 0; margin-top:1rem;
+  border-radius:0 0 30px 30px;
+  transition: background 0.5s;
+}
+.ticker-track {
+  display:flex; gap:2.5rem;
+  animation:ticker 22s linear infinite;
+  white-space:nowrap; width:max-content;
+}
+.ticker-track span {
+  font-size:0.78rem; font-weight:600;
+  color:var(--accent); letter-spacing:0.08em; flex-shrink:0;
+}
+@keyframes ticker { from{transform:translateX(0)} to{transform:translateX(-50%)} }
 
-  footer {
-    text-align: center;
-    margin-top: 4rem;
-    color: rgba(255,255,255,0.2);
-    font-size: 0.75rem;
-    font-weight: 300;
-  }
+/* ── MOBILE HOLD HINT ─────────────────────────────────────────────────── */
+.hold-hint {
+  display:none; position:fixed; z-index:300;
+  flex-direction:column; align-items:center; gap:0.6rem;
+  bottom:14%; left:50%; transform:translateX(-50%);
+}
+.hold-hint.visible { display:flex; animation:hintPop 0.5s cubic-bezier(0.34,1.56,0.64,1); }
+@keyframes hintPop {
+  from{transform:translateX(-50%) scale(0);opacity:0}
+  to{transform:translateX(-50%) scale(1);opacity:1}
+}
+.hold-circle {
+  width:80px; height:80px; border-radius:50%;
+  background:radial-gradient(circle at 35% 35%, #ffcad6, #ff4d77);
+  border:4px solid white;
+  box-shadow: 0 0 0 5px rgba(255,77,119,0.25), 0 0 0 12px rgba(255,77,119,0.1), 0 6px 24px rgba(255,77,119,0.5);
+  display:flex; align-items:center; justify-content:center;
+  font-size:1.8rem; pointer-events:auto; cursor:none !important;
+  animation:pulseHint 1.2s ease-in-out infinite;
+  user-select:none; -webkit-user-select:none; touch-action:none;
+}
+@keyframes pulseHint {
+  0%,100%{ box-shadow:0 0 0 5px rgba(255,77,119,0.25),0 0 0 12px rgba(255,77,119,0.1),0 6px 24px rgba(255,77,119,0.5); transform:scale(1); }
+  50%    { box-shadow:0 0 0 8px rgba(255,77,119,0.3), 0 0 0 20px rgba(255,77,119,0.08),0 6px 32px rgba(255,77,119,0.6); transform:scale(1.08); }
+}
+.hold-label {
+  font-size:0.8rem; font-weight:700; color:var(--accent); letter-spacing:0.08em;
+  text-align:center; background:white; padding:0.3rem 1rem; border-radius:50px;
+  box-shadow:0 4px 16px rgba(255,77,119,0.25); pointer-events:none; white-space:nowrap;
+}
+.hold-sublabel {
+  font-size:0.7rem; font-weight:600; color:rgba(255,77,119,0.6);
+  text-align:center; pointer-events:none;
+}
+
+/* ── SUCCESS ──────────────────────────────────────────────────────────── */
+.success-screen {
+  display:none; position:fixed; inset:0;
+  background:linear-gradient(135deg,#ffe0ec,#ffb6cc,#ffdde8);
+  z-index:100; flex-direction:column; align-items:center; justify-content:center;
+  gap:1.2rem; padding:2rem 2rem 3rem; text-align:center;
+  overflow-y:auto;
+}
+.success-screen.active { display:flex; }
+
+/* All direct children of success float above the falling img-petals */
+.success-screen > * { position: relative; z-index: 110; }
+.confetti-text {
+  font-family:'Abril Fatface',serif;
+  font-size:clamp(2.2rem,8vw,5rem); color:white;
+  text-shadow:4px 4px 0 rgba(180,40,80,0.3);
+  animation:popIn 0.7s cubic-bezier(0.34,1.56,0.64,1);
+}
+@keyframes popIn { from{transform:scale(0) rotate(-10deg)}to{transform:scale(1) rotate(0)} }
+.success-screen > img {
+  width:min(240px,70vw); border-radius:20px; border:5px solid white;
+  box-shadow:0 16px 40px rgba(255,77,119,0.3);
+  animation:popIn 0.7s 0.2s both cubic-bezier(0.34,1.56,0.64,1);
+}
+.success-msg {
+  font-size:clamp(1rem,3vw,1.3rem); font-weight:700; color:#c41e5a;
+  animation:popIn 0.7s 0.4s both cubic-bezier(0.34,1.56,0.64,1); line-height:1.4;
+}
+.success-msg small {
+  display:block; font-size:0.9em; font-weight:600; color:var(--accent); margin-top:0.3rem;
+}
+.success-screenshot {
+  font-size:clamp(0.7rem,2vw,0.82rem); color:rgba(180,40,80,0.7); font-weight:600;
+  animation:popIn 0.7s 0.55s both cubic-bezier(0.34,1.56,0.64,1); letter-spacing:0.03em;
+}
+
+/* ── CINEMA TICKET — coquette vintage ───────────────────────────────────
+   Real ticket shape: rounded ends + punched semicircles at the tear line
+   ───────────────────────────────────────────────────────────────────── */
+/* ── CINEMA TICKET — coquette pink & white ──────────────────────────── */
+.ticket-wrapper {
+  animation: popIn 0.7s 0.7s both cubic-bezier(0.34,1.56,0.64,1);
+  width: min(370px, 92vw);
+  position: relative;
+  padding: 0 14px; /* room for punches */
+  filter:
+    drop-shadow(0 6px 24px rgba(255,100,140,0.22))
+    drop-shadow(0 2px 6px rgba(255,133,161,0.14));
+}
+
+.cinema-ticket {
+  position: relative;
+  width: 100%;
+  background: linear-gradient(165deg,
+    #fff5f8 0%,
+    #ffe8f0 30%,
+    #fff0f5 55%,
+    #fce4ee 80%,
+    #fff5f8 100%
+  );
+  border-radius: 12px;
+  clip-path: polygon(
+    0% 0%, 100% 0%,
+    100% calc(50% - 14px),
+    100% 50%,
+    100% calc(50% + 14px),
+    100% 100%,
+    0% 100%,
+    0% calc(50% + 14px),
+    0% 50%,
+    0% calc(50% - 14px)
+  );
+  border: 1.5px solid rgba(255,133,161,0.45);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.9),
+    inset 0 -1px 0 rgba(255,133,161,0.1);
+  font-family: 'Special Elite', serif;
+  overflow: hidden;
+}
+
+/* Punched semicircles — match success-screen background color */
+.ticket-punch {
+  position: absolute;
+  top: 50%;
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #ffe0ec, #ffb6cc);
+  border: 1.5px solid rgba(255,133,161,0.4);
+  transform: translateY(-50%);
+  z-index: 5;
+  box-shadow: inset 0 2px 5px rgba(255,77,119,0.12);
+}
+.ticket-punch.left  { left:  0px; }
+.ticket-punch.right { right: 0px; }
+
+/* Dashed tear line */
+.ticket-tearline {
+  position: absolute;
+  left: 14px; right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  border-top: 1.5px dashed rgba(255,133,161,0.35);
+  pointer-events: none;
+  z-index: 3;
+}
+
+/* Pink bow on top */
+.ticket-bow {
+  position: absolute;
+  top: -15px; left: 50%;
+  transform: translateX(-50%);
+  font-size: 1.5rem;
+  z-index: 6;
+  filter: drop-shadow(0 2px 5px rgba(255,77,119,0.35));
+}
+
+/* TOP HALF — deep pink gradient header */
+.ticket-top {
+  padding: 1.4rem 1.6rem 1.1rem;
+  text-align: center;
+  position: relative;
+  background: linear-gradient(170deg, #ff85a1 0%, #ff6b8e 50%, #ff4d77 100%);
+}
+/* scalloped bottom on header */
+.ticket-top::after {
+  content: '';
+  position: absolute;
+  bottom: -10px; left: 0; right: 0; height: 20px;
+  background: inherit;
+  clip-path: ellipse(51% 100% at 50% 0%);
+}
+
+.ticket-cinema-name {
+  font-size: clamp(0.45rem, 1.3vw, 0.58rem);
+  color: rgba(255,255,255,0.75);
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  margin-bottom: 0.45rem;
+  font-family: 'Nunito', sans-serif;
+  font-weight: 600;
+}
+
+.ticket-title {
+  font-size: clamp(1.15rem, 4vw, 1.55rem);
+  color: #fff;
+  line-height: 1.1;
+  text-shadow: 0 2px 8px rgba(180,20,60,0.25), 1px 1px 0 rgba(0,0,0,0.06);
+}
+.ticket-title .film-name { color: #fff; }
+.ticket-title .and-sign  { font-size: 0.68em; color: rgba(255,255,255,0.7); }
+
+.ticket-ornament {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  justify-content: center;
+  margin: 0.6rem 0 0.4rem;
+}
+.ticket-ornament-line {
+  flex: 1; height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.5), transparent);
+}
+.ticket-ornament-stars { color: rgba(255,255,255,0.9); font-size: 0.6rem; letter-spacing: 4px; }
+
+.ticket-admit {
+  font-size: clamp(0.55rem, 1.6vw, 0.68rem);
+  color: rgba(255,255,255,0.85);
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  font-family: 'Nunito', sans-serif;
+  font-weight: 600;
+}
+
+/* BOTTOM HALF — white/soft pink */
+.ticket-bottom {
+  padding: 1.4rem 1.6rem 1.1rem;
+  background: rgba(255,255,255,0.6);
+  position: relative;
+}
+
+.ticket-fields {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.6rem 1rem;
+  margin-bottom: 0.75rem;
+}
+.ticket-field {
+  display: flex; flex-direction: column; gap: 0.06rem;
+}
+.ticket-field label {
+  font-size: 0.43rem;
+  color: rgba(255,77,119,0.55);
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  font-family: 'Nunito', sans-serif;
+  font-weight: 700;
+}
+.ticket-field value {
+  font-size: clamp(0.64rem, 2vw, 0.76rem);
+  color: #5a1a2e;
+  font-family: 'Special Elite', serif;
+}
+
+.ticket-barcode-row {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding-top: 0.55rem;
+  border-top: 1px dashed rgba(255,133,161,0.3);
+}
+.barcode-lines {
+  flex: 1; height: 26px;
+  display: flex; align-items: stretch; gap: 1.5px;
+  overflow: hidden; border-radius: 2px;
+}
+.barcode-lines span {
+  display: block; flex: 1;
+  background: rgba(255,77,119,0.35); border-radius: 0.5px;
+}
+.barcode-lines span:nth-child(3n)  { flex:2.5; background:rgba(255,77,119,0.55); }
+.barcode-lines span:nth-child(5n)  { flex:1.5; background:rgba(255,77,119,0.18); }
+.barcode-lines span:nth-child(7n)  { flex:3;   background:rgba(255,77,119,0.72); }
+.barcode-lines span:nth-child(11n) { flex:1;   background:rgba(255,77,119,0.12); }
+.barcode-num {
+  font-size: 0.43rem; color: rgba(255,77,119,0.45);
+  letter-spacing: 0.1em; font-family:'Courier New',monospace;
+  writing-mode: vertical-rl; white-space:nowrap;
+}
+
+.ticket-stamp {
+  position: absolute;
+  bottom: 1rem; right: 1.3rem;
+  transform: rotate(-13deg);
+  font-family: 'Special Elite', serif;
+  font-size: 0.82rem; color: rgba(255,77,119,0.28);
+  border: 2.5px solid rgba(255,77,119,0.28);
+  border-radius: 4px;
+  padding: 0.08rem 0.45rem;
+  letter-spacing: 0.2em;
+  pointer-events:none; white-space:nowrap;
+}
+.ticket-corner {
+  position: absolute;
+  font-size: 0.75rem;
+  opacity: 0.4;
+  pointer-events: none;
+  color: rgba(255,77,119,0.7);
+}
+.ticket-corner.tl { top:0.4rem;  left:0.5rem;  transform: rotate(-15deg); }
+.ticket-corner.tr { top:0.4rem;  right:0.5rem; transform: rotate(15deg); }
+.ticket-corner.bl { bottom:0.4rem; left:0.5rem;  transform: rotate(15deg); }
+.ticket-corner.br { bottom:0.4rem; right:0.5rem; transform: rotate(-15deg); }
+
+/* ── HACKER SCREEN ────────────────────────────────────────────────────── */
+.hacker-screen {
+  display:none; position:fixed; inset:0; background:#000;
+  z-index:100; flex-direction:column; align-items:center; justify-content:center;
+  gap:1rem; padding:1rem; overflow:hidden;
+}
+.hacker-screen.active { display:flex; }
+
+.hacker-screen[data-level="1"] pre,
+.hacker-screen[data-level="1"] .msg { animation:strobe1 0.6s steps(1) infinite; }
+@keyframes strobe1 {
+  0%     { color:#00ff41; text-shadow:0 0 8px #00ff41,0 0 20px #00ff4188; }
+  33.33% { color:#00bfff; text-shadow:0 0 8px #00bfff,0 0 20px #00bfff88; }
+  66.66% { color:#ff2222; text-shadow:0 0 8px #ff2222,0 0 20px #ff222288; }
+}
+
+.hacker-screen[data-level="2"] pre,
+.hacker-screen[data-level="2"] .msg { animation:strobe2 0.4s steps(1) infinite; }
+@keyframes strobe2 {
+  0%  { color:#00ff41; text-shadow:0 0 10px #00ff41,0 0 30px #00ff41aa; }
+  25% { color:#00bfff; text-shadow:0 0 10px #00bfff,0 0 30px #00bfffaa; }
+  50% { color:#ff1111; text-shadow:0 0 12px #ff1111,0 0 40px #ff1111bb; }
+  75% { color:#ff3300; text-shadow:0 0 10px #ff3300,0 0 30px #ff3300aa; }
+}
+
+.hacker-screen[data-level="3"] pre,
+.hacker-screen[data-level="3"] .msg { animation:strobe3 0.25s steps(1) infinite; }
+@keyframes strobe3 {
+  0%  { color:#8b0000; text-shadow:0 0 14px #8b0000,0 0 50px #8b0000cc; }
+  20% { color:#ff0000; text-shadow:0 0 18px #ff0000,0 0 60px #ff0000dd; }
+  40% { color:#00ff00; text-shadow:0 0 8px  #00ff00,0 0 20px #00ff0066; }
+  60% { color:#cc0000; text-shadow:0 0 16px #cc0000,0 0 55px #cc0000cc; }
+  80% { color:#ff0033; text-shadow:0 0 20px #ff0033,0 0 70px #ff0033dd; }
+}
+
+.hacker-screen[data-level="4"] pre,
+.hacker-screen[data-level="4"] .msg { animation:strobe4 0.12s steps(1) infinite; }
+@keyframes strobe4 {
+  0%  { color:#ff0000; text-shadow:0 0 20px #ff0000,0 0 80px #ff0000ee; }
+  30% { color:#8b0000; text-shadow:0 0 24px #8b0000,0 0 90px #8b0000ff; }
+  60% { color:#ff2200; text-shadow:0 0 18px #ff2200,0 0 70px #ff2200ee; }
+  80% { color:#660000; text-shadow:0 0 28px #660000,0 0 100px #660000ff; }
+  90% { color:#ff0000; text-shadow:0 0 30px #ff0000,0 0 120px #ff0000ff; }
+}
+
+.hacker-screen pre {
+  font-size:clamp(3.5px,0.85vw,9px); line-height:1.1; font-family:monospace;
+}
+.hacker-screen .msg {
+  font-family:'Courier New',monospace;
+  font-size:clamp(0.85rem,2.5vw,1.1rem); letter-spacing:0.15em;
+}
+
+/* ── RESPONSIVE ───────────────────────────────────────────────────────── */
+@media (max-width:480px) {
+  .main-wrapper { padding:1rem 0.8rem; align-items:flex-start; padding-top:1.5rem; }
+  .sticker { display:none; }
+  .card { border-radius:24px; }
+  .card-header { padding:1.4rem 1.2rem; }
+  .card-body { padding:1.8rem 1.2rem 0; }
+  .btns { gap:0.7rem; }
+  .btn-yes,.btn-no { padding:0.75rem 1.6rem; font-size:0.95rem; }
+  .hacker-screen pre { font-size:clamp(2.5px,1.8vw,5px); }
+}
 </style>
 </head>
 <body>
 
-<header>
-  <div class="badge">design selector</div>
-  <h1>Elige tu diseño favorito 🎀</h1>
-  <p>5 versiones del mismo proyecto · Elige una y el resto se elimina</p>
-</header>
+<!-- CUSTOM CURSOR -->
+<div id="cursor-dot"></div>
+<div id="cursor-ring"></div>
 
-<div class="grid">
+<div class="sticker">🎀</div>
+<div class="sticker">✨</div>
+<div class="sticker">🌸</div>
+<div class="sticker">💕</div>
+<div class="sticker">⭐</div>
+<div class="sticker">🍓</div>
 
-  <a href="./1/index.html" class="card">
-    <div class="preview">
-      🌸✨🌸
-      <div class="preview-label">Diseño 1</div>
-    </div>
-    <div class="card-body">
-      <div class="card-title">Romantic Blush <span>🎀</span></div>
-      <p class="card-desc">Fondo cremoso con pétalos cayendo, imágenes circulares flotantes en las esquinas, card central con bordes suaves. Tipografía Playfair Display italic. Muy dulce y romántico.</p>
-      <div class="tags">
-        <span class="tag">romántico</span>
-        <span class="tag">pétalos</span>
-        <span class="tag">card centrada</span>
-        <span class="tag">claro</span>
-      </div>
-      <div class="open-btn">Abrir diseño <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg></div>
-    </div>
-  </a>
-
-  <a href="./2/index.html" class="card">
-    <div class="preview">
-      🍵💕🍵
-      <div class="preview-label">Diseño 2</div>
-    </div>
-    <div class="card-body">
-      <div class="card-title">Editorial Split <span>✨</span></div>
-      <p class="card-desc">Layout 50/50 texto izquierda · imagen derecha. Blobs de blur de fondo. Borde inferior sólido en botones tipo brutalismo suave. DM Serif Display. Moderno y editorial.</p>
-      <div class="tags">
-        <span class="tag">editorial</span>
-        <span class="tag">dos columnas</span>
-        <span class="tag">minimalista</span>
-        <span class="tag">claro</span>
-      </div>
-      <div class="open-btn">Abrir diseño <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg></div>
-    </div>
-  </a>
-
-  <a href="./3/index.html" class="card">
-    <div class="preview">
-      🍓🎀🍓
-      <div class="preview-label">Diseño 3</div>
-    </div>
-    <div class="card-body">
-      <div class="card-title">Bubblegum Pop <span>🍬</span></div>
-      <p class="card-desc">Card con triple borde concéntrico, header en gradiente rosa. Stickers flotando con animación wiggle. Burbujas animadas de fondo. Abril Fatface. Muy divertido y kawaii.</p>
-      <div class="tags">
-        <span class="tag">kawaii</span>
-        <span class="tag">stickers</span>
-        <span class="tag">burbujas</span>
-        <span class="tag">playful</span>
-      </div>
-      <div class="open-btn">Abrir diseño <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg></div>
-    </div>
-  </a>
-
-  <a href="./4/index.html" class="card">
-    <div class="preview">
-      🌹💌🌹
-      <div class="preview-label">Diseño 4</div>
-    </div>
-    <div class="card-body">
-      <div class="card-title">Coquette Polaroid <span>🎞</span></div>
-      <p class="card-desc">Polaroids apilados flotando en los lados. Esquinas decorativas tipo foto antigua. Circles decorativos con borde. Gilda Display serif. Muy coquette, íntimo y elegante.</p>
-      <div class="tags">
-        <span class="tag">coquette</span>
-        <span class="tag">polaroids</span>
-        <span class="tag">elegante</span>
-        <span class="tag">claro</span>
-      </div>
-      <div class="open-btn">Abrir diseño <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg></div>
-    </div>
-  </a>
-
-  <a href="./5/index.html" class="card">
-    <div class="preview" style="color:white;">
-      🎬🔥🎬
-      <div class="preview-label">Diseño 5</div>
-    </div>
-    <div class="card-body">
-      <div class="card-title">Bold Dark Split <span>⚡</span></div>
-      <p class="card-desc">Fondo oscuro con split diagonal. Marquee de texto en la parte inferior. Bebas Neue enorme. Grid de imágenes pequeñas. Botón con clip-path. Contraste máximo, muy impactante.</p>
-      <div class="tags">
-        <span class="tag">oscuro</span>
-        <span class="tag">bold</span>
-        <span class="tag">marquee</span>
-        <span class="tag">diagonal</span>
-      </div>
-      <div class="open-btn">Abrir diseño <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg></div>
-    </div>
-  </a>
-
+<div class="bg-deco">
+  <img src="assets/cute/hello kitty heart.jpg" alt="">
+  <img src="assets/cute/pink miffi.jpg" alt="">
+  <img src="assets/cute/bag miffy.jpg" alt="">
+  <img src="assets/cute/pink balloon mifi .jpg" alt="">
 </div>
 
-<footer>
-  <p>Cuando elijas tu favorito, dime el número y elimino el resto 🎀</p>
-</footer>
+<div class="petals-layer" id="petalsLayer"></div>
+<div class="bg-bubbles" id="bubbles"></div>
 
+<div class="main-wrapper">
+  <div class="card" id="mainCard">
+    <div class="card-header" id="cardHeader">
+      <h1>Nath! 🎀</h1>
+      <p>Una invitación cordial para la persona<br>más hermosa de mi vida 💕</p>
+    </div>
+    <div class="card-body">
+      <div class="img-container">
+        <img id="mainImg" src="assets/cute/bag miffy.jpg" class="main-img" alt="">
+        <div class="img-badge">🎬</div>
+      </div>
+      <p class="question" id="questionText">¿Quieres venir a hacer maratón de peliculitas en mi casa, mi amor? 🍿🎬</p>
+      <div class="btns">
+        <button class="btn-yes" onclick="sayYes()">¡Claro que sí! 💕</button>
+        <!-- ghost placeholder keeps layout stable when NO goes fixed -->
+        <span class="btn-no-ghost">No...</span>
+      </div>
+      <!-- NO button rendered outside btns so layout never shifts -->
+      <button class="btn-no" id="noBtn" onclick="sayNo()">No...</button>
+      <div class="img-strip">
+        <img src="assets/cute/hello kitty heart.jpg" alt="">
+        <img src="assets/cute/pink miffi.jpg" alt="">
+        <img src="assets/cute/pink balloon mifi .jpg" alt="">
+      </div>
+    </div>
+    <div class="ticker-wrap" id="tickerWrap">
+      <div class="ticker-track">
+        <span>🌸 eres la más linda del mundo</span>
+        <span>💕 quiero verte hoy</span>
+        <span>✨ palomitas + tú = perfecto</span>
+        <span>🎀 di que sí por faaavor</span>
+        <span>🍓 te prometo que escojo buena peli</span>
+        <span>💖 eres mi persona favorita</span>
+        <span>🌸 eres la más linda del mundo</span>
+        <span>💕 quiero verte hoy</span>
+        <span>✨ palomitas + tú = perfecto</span>
+        <span>🎀 di que sí por faaavor</span>
+        <span>🍓 te prometo que escojo buena peli</span>
+        <span>💖 eres mi persona favorita</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MOBILE HOLD HINT -->
+<div class="hold-hint" id="holdHint">
+  <div class="hold-circle" id="holdCircle">🎀</div>
+  <div class="hold-label">¡Mantén presionado aquí!</div>
+  <div class="hold-sublabel">…y luego toca el botón "No"</div>
+</div>
+
+<!-- SUCCESS -->
+<div class="success-screen" id="successScreen">
+  <div class="confetti-text">¡SÍ QUE SÍIII! 🎉</div>
+  <img src="assets/success/GyRpijUWAAAjj4j.jpg" alt="success">
+  <p class="success-msg">
+    TE AMO MUCHO
+    <small>SIX SEVEN &nbsp;·&nbsp; SEIS SIETE &nbsp;·&nbsp; 6 7 &nbsp;🎀</small>
+  </p>
+  <p class="success-screenshot">📸 Manda screenshot como evidencia de que vas a asistir 🎀</p>
+
+  <div class="ticket-wrapper">
+    <!-- punched semicircles at tear line -->
+    <div class="ticket-punch left"></div>
+    <div class="ticket-punch right"></div>
+    <!-- dashed tear line -->
+    <div class="ticket-tearline"></div>
+    <!-- bow on top -->
+    <div class="ticket-bow">🎀</div>
+
+    <div class="cinema-ticket">
+      <!-- corner flourishes -->
+      <span class="ticket-corner tl">✿</span>
+      <span class="ticket-corner tr">✿</span>
+
+      <!-- TOP HALF -->
+      <div class="ticket-top">
+        <div class="ticket-cinema-name">✦ Cinecito Coquette &nbsp;·&nbsp; Sala 1 ✦</div>
+        <div class="ticket-title">
+          <span class="film-name">Obsession</span>
+          <span class="and-sign"> &amp; </span>
+          <span class="film-name">Backrooms</span>
+        </div>
+        <div class="ticket-ornament">
+          <div class="ticket-ornament-line"></div>
+          <span class="ticket-ornament-stars">★ ★ ★ ★ ★</span>
+          <div class="ticket-ornament-line"></div>
+        </div>
+        <div class="ticket-admit">Admit One &nbsp;·&nbsp; Entrada Especial</div>
+      </div>
+
+      <!-- BOTTOM HALF -->
+      <div class="ticket-bottom">
+        <div class="ticket-fields">
+          <div class="ticket-field">
+            <label>Fecha</label>
+            <value>09 / 06 / 2026</value>
+          </div>
+          <div class="ticket-field">
+            <label>Sala</label>
+            <value>Sala 1 — Mi cuarto 🛏️</value>
+          </div>
+          <div class="ticket-field">
+            <label>Puesto</label>
+            <value>Mi pecho mamasota 💕</value>
+          </div>
+          <div class="ticket-field">
+            <label>Asistente</label>
+            <value>Nath 🎀</value>
+          </div>
+          <div class="ticket-barcode-row">
+            <div class="barcode-lines">
+              <span></span><span></span><span></span><span></span><span></span>
+              <span></span><span></span><span></span><span></span><span></span>
+              <span></span><span></span><span></span><span></span><span></span>
+              <span></span><span></span><span></span><span></span><span></span>
+              <span></span><span></span><span></span><span></span><span></span>
+              <span></span><span></span><span></span><span></span><span></span>
+            </div>
+            <div class="barcode-num">6·7 · SIX SEVEN</div>
+          </div>
+        </div>
+        <div class="ticket-stamp">CONFIRMADO</div>
+        <span class="ticket-corner bl">✿</span>
+        <span class="ticket-corner br">✿</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- HACKER -->
+<div class="hacker-screen" id="hackerScreen" data-level="1">
+  <pre>⠀⠀⠀⠀⠀⠀⠀⠄⣀⠢⢀⣤⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣄⠀⡔⢀⠂⡜⢭⢻⣍⢯⡻⣝⣿⣿⡿⣟⠂
+⠀⠀⠀⠀⠀⠀⠀⠄⠀⣦⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⡔⡀⢂⠜⣪⢗⡾⣶⡽⣾⣟⣯⠛⠀⠀
+⠀⠀⠀⠀⠀⠄⠀⠠⣶⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣔⠨⡸⡝⣯⣳⢏⣿⠳⠉⠀⢠⣬⡶
+⠠⣓⢤⣂⣄⣀⢀⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡆⠁⣞⡱⣝⠎⠀⢀⠠⣥⠳⡞⡹
+⠀⡄⢉⠲⢿⣼⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡔⣧⡽⠋⠀⣰⣶⣻⣶⣿⢾⣷
+⢤⡈⠉⠲⢤⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠁⢀⡴⢏⡳⢮⡿⣽⣞⠻⡜
+⠒⣭⠳⢶⣼⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⢿⡙⠮⣜⣯⡽⣳⢌⡓⠈
+⡸⣰⢋⣷⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣻⢿⣻⣿⡽⣗⠋⠄⠀
+⠣⢇⢟⣸⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣧⢟⡿⢣⣟⡻⠘⠀⠀⠀
+⠱⡊⠤⣸⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠨⠗⠋⣁⣤⠖⠊⢁⣀
+⠀⠁⠂⢹⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡏⠀⠀⠀⠀⣿⡂⠹⣿⣿⣿⣿⣿⠙⣿⣿⣿⣿⣿⣿⣿⣿⡿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠄⠒⢋⣉⡤⣔⣮⣽⣾
+⢢⠣⣌⢼⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠀⠀⠀⠀⢰⣿⡅⠀⣿⣿⣿⣿⣿⠀⠸⢿⣹⣿⣿⣿⣿⣿⡇⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣶⣻⣿⣿⣿⣿⣿⣿⣿
+⢃⡉⠠⢸⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡟⣼⢹⠀⠀⠀⠀⣾⠿⡇⠀⣿⣿⣿⣿⡏⠀⠀⣞⣧⣻⠟⢿⣿⣿⢠⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⣧⠱⣌⣳⣽⣻⣿⣿⣻
+⠀⢒⡕⣺⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠁⡇⠈⣇⠀⠀⠀⠈⡆⢳⠀⠇⡟⠋⠉⠀⠀⠀⠃⢙⣠⣤⣤⣼⣯⣚⣟⢸⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠀⠌⠑⠌⢳⠛⡛⠏⠛⠉
+⡘⢷⣌⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡟⠉⢻⣀⣧⣤⣽⣦⣤⣄⠀⠰⡀⠃⠀⠀⠀⠀⠀⠀⡴⠟⠛⣉⣉⡉⠉⠈⠉⠉⠉⠋⢻⣿⣿⣿⣿⣿⣿⣿⣿⣿⠀⢈⠈⠈⠁⠛⠀⠀⠀⣒
+⠉⢣⡛⣿⣿⣿⣿⣿⣿⣿⣿⣿⡧⠖⠛⠉⠉⠉⠀⠀⠐⠒⢢⡄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡾⣠⣲⣾⣿⢿⣷⢶⡄⠀⠀⣽⣿⣿⣿⣿⡿⠟⣿⣿⣿⣿⣿⠛⢁⣤⡶⠿⠛⠋
+⠀⠀⠌⢽⣿⣿⣿⣿⣿⣿⣿⣿⡷⠀⠀⠀⣠⣶⣶⣿⣟⣿⣶⡅⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠃⢿⣿⣿⣿⣿⠀⣿⡀⠀⢻⣬⣙⡻⡿⣡⣾⣿⣿⡍⠈⣀⣤⣬⣤⣶⣲⣶⣿
+⠀⢈⠐⡀⢻⣫⢿⣿⣿⣿⣿⠘⢧⠁⠀⣻⡏⠸⣿⣿⣿⣿⠏⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠑⢄⣉⣛⣋⣡⡴⠃⠀⠀⣿⣿⣿⠟⣠⡛⢿⣿⣿⣷⣲⣽⣿⣿⣷⣾⣷⣿⣿
+⠀⠀⢀⠐⡀⢃⡈⣿⢿⣿⣿⣟⡆⠀⠀⠉⠿⣦⣈⣉⣉⠤⠚⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⡟⣡⣶⣿⣿⣾⣿⣿⣿⢿⡿⣿⣿⡿⠿⠛⣋⣡
+⠠⠐⡀⢢⣶⣿⢧⠻⣯⣿⣯⡛⢿⡄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⠘⠐⠂⡁⠤⠔⢂⣉⣤⡴
+⣀⠥⠌⣳⢯⣟⣮⣗⣾⣟⣿⣿⣦⣭⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⠂⣈⠥⡔⡤⣍⠣⣝⢾⡹
+⠀⠀⠀⠠⠈⠉⠈⠉⠉⠉⣨⣿⣿⣿⣯⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣿⣿⣿⣿⣿⣿⣿⣿⡟⠻⢞⣿⣝⣳⢎⢳⢻⡮⣕
+⠀⠀⢀⠀⡀⠀⠀⣀⣴⣾⣿⣿⣿⣿⣿⣧⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣰⣿⣿⣿⣿⣿⣿⣿⣿⣿⡗⢠⠘⡼⣽⣛⡞⠦⣧⢻⣽
+⠀⢈⠀⡀⡀⢤⠞⡉⢭⣹⣿⣿⣿⣿⣿⣿⣿⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠈⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣴⣿⣿⣿⣿⣿⣿⣿⣿⣟⣿⣍⣣⢾⣵⣯⣷⣽⣦⣑⣯⢿
+⠀⠂⣴⣾⡟⣧⠊⡔⢢⠛⣿⣿⣿⣿⣿⣿⣿⣿⣷⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠐⠒⠂⠀⠀⠀⠀⠀⠀⠀⠀⠀⢠⣾⣿⣿⣿⣿⣿⣿⣿⣿⡟⠉⣯⢹⣽⢻⣿⣿⣿⣿⣿⣿⣿⣿
+⣶⣟⠳⣏⡿⣎⠳⣈⡜⣺⣿⠿⢿⣝⡿⣫⢟⣽⣿⣿⠻⣦⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⠔⠛⣿⠿⣟⢩⢾⣿⣿⣿⣿⣇⠾⣜⡧⣯⣟⣿⣿⣿⣿⣿⣿⣿⣿
+⠋⢀⢱⣫⣟⢾⡹⢴⡸⣵⡏⣂⢾⡿⣽⣹⣟⣾⣿⡟⢠⡇⠀⣹⠂⠄⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣷⣣⢟⡿⣾⣿⣿⣿⣿⢌⠫⢝⡻⣵⢻⡟⣿⢿⣿⢿⡿⣿⠿
+⠀⢢⠞⣴⢯⢯⣝⣦⢳⡝⡶⣭⣿⣽⣳⣟⡾⣽⡟⢀⡟⠀⢀⡿⠀⠀⠀⠁⠠⠤⠀⠀⠀⠤⠐⠀⠀⠀⠀⠀⠀⠀⢸⡗⠈⠭⣿⣿⣿⣿⡿⢌⠣⡀⡐⢈⠃⠚⠦⣉⠂⠣⠜⡄⢋
+⣜⣷⢻⡜⣯⣾⡞⣥⣓⢾⡽⢎⡷⢯⡷⣯⢟⣽⠃⣸⠁⠀⡼⠃⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢻⡄⢹⣿⣿⣿⣿⢃⡮⡑⢰⢠⣂⡜⣦⡴⣱⣎⣴⣩⡜⣦
+⣿⣯⢷⡻⣏⣷⣟⠶⣙⠮⡙⢪⠜⣯⢽⣯⣿⠃⠄⢃⣠⠞⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠹⣾⣿⣿⣿⡇⠢⢡⡙⢦⡓⡼⣽⣾⣿⣿⣿⣿⣷⣿⣿
+⣿⡹⢇⡳⡹⣞⠘⡈⢅⠢⢁⠂⡘⠤⣋⣶⣡⠴⠚⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⠰⡁⢆⠘⣡⠻⣽⣳⣿⣿⣿⣿⢿⣿⣿⣿
+⢣⠝⡢⢍⠱⢈⣂⣌⡤⠦⠶⠶⠞⠛⠋⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢰⣿⣿⣿⠛⠷⣭⣂⠌⢠⠓⡴⣻⣿⣿⣿⣿⣿⣿⣯⣿
+⣇⢾⡱⠞⠈⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣸⣿⣿⡇⠀⠀⠀⠉⠛⠳⠿⣶⣽⣿⣿⣿⣿⣿⣿⣿⣿</pre>
+  <div class="msg">congrats you hacker &lt;3</div>
+</div>
+
+<script>
+/* ── MESSAGES & ASSETS ─────────────────────────────────────────────────── */
+const messages = [
+  "¿Quieres venir a hacer maratón de peliculitas en mi casa, mi amor? 🍿🎬",
+  "Mamorrrr porfavorrrr 🥺🎀",
+  "Sino vienes te jalo las patas 😤👣",
+  "te juro por dios que me voy a matar careculo FOKIU FOKIU FOKIU FOKIU FOKIU FOKIU FOKIU 💀",
+  "MAMORRRRR POR FAVORRRRR 😭😭😭",
+  "no me hagas esto nath por favor 💔",
+  "te lo suplico con todo mi corazón 🙏🍿",
+  "NANANANANAAAAAA FOKIUUUU 😡",
+  "NATHHHH TE LO JUROOOOO 💀💀💀"
+];
+
+const creepyImgs = [
+  "assets/creepy pasta/hello kitty miedo .jpg",
+  "assets/creepy pasta/images.jpg",
+  "assets/creepy pasta/miffy miedo.jpg"
+];
+
+/* ── COLOUR TINT ESCALATION ────────────────────────────────────────────── */
+// Each level shifts the card slightly more unsettling
+const tintLevels = [
+  { bg:'#fff9fb', card:'#ffffff', header:'linear-gradient(135deg,#ff85a1,#ff4d77)', ticker:'linear-gradient(135deg,#ffd6e3,#ffcad6)', noColor:'#ff85a1', noBorder:'#ffd6e3' },
+  { bg:'#fff2f5', card:'#fff5f7', header:'linear-gradient(135deg,#ff6b8a,#e8325a)', ticker:'linear-gradient(135deg,#ffbdcc,#ffadc0)', noColor:'#e8325a', noBorder:'#ffbdcc' },
+  { bg:'#ffe8ec', card:'#fff0f2', header:'linear-gradient(135deg,#e8325a,#c4143e)', ticker:'linear-gradient(135deg,#ffa0b4,#ff88a0)', noColor:'#c4143e', noBorder:'#ffa0b4' },
+  { bg:'#ffd6de', card:'#ffe8ec', header:'linear-gradient(135deg,#c4143e,#960030)', ticker:'linear-gradient(135deg,#ff7090,#ff507a)', noColor:'#960030', noBorder:'#ff7090' },
+];
+
+function applyTint(level) {
+  const t = tintLevels[Math.min(level, tintLevels.length - 1)];
+  document.body.style.background = t.bg;
+  document.getElementById('mainCard').style.background = t.card;
+  document.getElementById('cardHeader').style.background = t.header;
+  document.getElementById('tickerWrap').style.background = t.ticker;
+  noBtn.style.color = t.noColor;
+  noBtn.style.borderColor = t.noBorder;
+}
+
+/* ── STATE ─────────────────────────────────────────────────────────────── */
+let noCount    = 0;
+let isMoving   = false;
+let holdActive = false;
+
+const noBtn      = document.getElementById('noBtn');
+const mainImg    = document.getElementById('mainImg');
+const qText      = document.getElementById('questionText');
+const holdHint   = document.getElementById('holdHint');
+const holdCircle = document.getElementById('holdCircle');
+const hackerScr  = document.getElementById('hackerScreen');
+
+const isTouch = () => ('ontouchstart' in window) || navigator.maxTouchPoints > 0;
+
+/* ── CURSOR ────────────────────────────────────────────────────────────── */
+const dot  = document.getElementById('cursor-dot');
+const ring = document.getElementById('cursor-ring');
+let ringX = 0, ringY = 0, dotX = 0, dotY = 0;
+
+document.addEventListener('mousemove', e => {
+  dotX = e.clientX; dotY = e.clientY;
+  dot.style.left  = dotX + 'px';
+  dot.style.top   = dotY + 'px';
+  // Ring lags via CSS transition
+  ring.style.left = dotX + 'px';
+  ring.style.top  = dotY + 'px';
+});
+
+/* ── NO BUTTON: position to match ghost, then go random ──────────────── */
+function placeNoRandom() {
+  const margin = 70;
+  const w = noBtn.offsetWidth  || 120;
+  const h = noBtn.offsetHeight || 48;
+  const x = margin + Math.random() * (window.innerWidth  - w - margin * 2);
+  const y = margin + Math.random() * (window.innerHeight - h - margin * 2);
+  noBtn.style.left = x + 'px';
+  noBtn.style.top  = y + 'px';
+}
+
+// On load: snap the NO button to exactly where the ghost placeholder sits
+// so the first animated jump starts from there.
+function snapNoToGhost() {
+  const ghost = document.querySelector('.btn-no-ghost');
+  if (!ghost) return;
+  const r = ghost.getBoundingClientRect();
+  // Disable transition momentarily so this is instant
+  noBtn.style.transition = 'none';
+  noBtn.style.left = r.left + 'px';
+  noBtn.style.top  = r.top  + 'px';
+  // Force reflow then re-enable transition
+  void noBtn.offsetWidth;
+  noBtn.style.transition = '';
+  noBtn.classList.add('ready');
+}
+// Run after fonts/layout settle
+requestAnimationFrame(() => requestAnimationFrame(snapNoToGhost));
+
+// Desktop: flee on hover
+noBtn.addEventListener('mouseover', () => {
+  if (isMoving && !isTouch()) placeNoRandom();
+});
+
+/* ── SAY NO ────────────────────────────────────────────────────────────── */
+function sayNo() {
+  noCount++;
+
+  qText.textContent = messages[Math.min(noCount, messages.length - 1)];
+
+  const imgIdx = (noCount - 1) % creepyImgs.length;
+  mainImg.src = creepyImgs[imgIdx];
+  mainImg.classList.remove('bounce');
+  void mainImg.offsetWidth;
+  mainImg.classList.add('bounce');
+
+  // Colour tint escalation
+  applyTint(Math.floor((noCount - 1) / 2));
+
+  // First 3 clicks: animate from ghost position to a random spot
+  // noCount >= 3 triggers moving; the SAME click also moves it
+  if (noCount >= 3 && !isMoving) {
+    isMoving = true;
+    placeNoRandom(); // smooth because transition is already set
+    if (isTouch()) holdHint.classList.add('visible');
+  } else if (isMoving) {
+    placeNoRandom();
+  }
+
+  if (isMoving && noCount > 3) {
+    const pressesWhileMoving = noCount - 3;
+    hackerScr.dataset.level = Math.min(pressesWhileMoving, 4);
+    hackerScr.classList.add('active');
+    return;
+  }
+}
+
+/* ── SAY YES ───────────────────────────────────────────────────────────── */
+function sayYes() {
+  document.getElementById('successScreen').classList.add('active');
+  launchImagePetals();
+}
+
+/* ── IMAGE PETAL RAIN ──────────────────────────────────────────────────── */
+const cuteImgs = [
+  "assets/cute/hello kitty heart.jpg",
+  "assets/cute/pink miffi.jpg",
+  "assets/cute/bag miffy.jpg",
+  "assets/cute/pink balloon mifi .jpg"
+];
+
+function launchImagePetals() {
+  let count = 0;
+  const total = 40;
+  function drop() {
+    if (count >= total) return;
+    const el = document.createElement('img');
+    el.className = 'img-petal';
+    el.src = cuteImgs[count % cuteImgs.length];
+    const size = 50 + Math.random() * 70;
+    el.style.width  = size + 'px';
+    el.style.height = size + 'px';
+    el.style.left   = (Math.random() * 95) + 'vw';
+    el.style.top    = '-90px';
+    el.style.animationDuration = (9 + Math.random() * 8) + 's';
+    el.style.animationDelay    = '0s';
+    document.body.appendChild(el);
+    el.addEventListener('animationend', () => el.remove());
+    count++;
+    setTimeout(drop, 200 + Math.random() * 300);
+  }
+  drop();
+}
+
+/* ── MOBILE HOLD-TO-FREEZE ─────────────────────────────────────────────── */
+function startHold(e) {
+  e.preventDefault();
+  holdActive = true;
+  noBtn.classList.add('frozen');
+  const cx = window.innerWidth  / 2 - 60 + (Math.random() - 0.5) * 80;
+  const cy = window.innerHeight * 0.35   + (Math.random() - 0.5) * 60;
+  noBtn.style.left = cx + 'px';
+  noBtn.style.top  = cy + 'px';
+}
+function endHold() {
+  if (!holdActive) return;
+  holdActive = false;
+  noBtn.classList.remove('frozen');
+}
+holdCircle.addEventListener('touchstart',  startHold, { passive:false });
+holdCircle.addEventListener('mousedown',   startHold);
+holdCircle.addEventListener('touchend',    endHold);
+holdCircle.addEventListener('touchcancel', endHold);
+holdCircle.addEventListener('mouseup',     endHold);
+holdCircle.addEventListener('mouseleave',  endHold);
+
+/* ── AMBIENT PETALS — slow, smooth, behind content ─────────────────────── */
+const petalsLayer = document.getElementById('petalsLayer');
+for (let i = 0; i < 12; i++) {
+  const p = document.createElement('div');
+  p.className = 'petal';
+  const w = 6 + Math.random() * 9;
+  p.style.width             = w + 'px';
+  p.style.height            = (w * 1.4) + 'px';
+  p.style.left              = (Math.random() * 100) + '%';
+  p.style.opacity           = (0.07 + Math.random() * 0.11).toFixed(2);
+  p.style.animationDuration = (14 + Math.random() * 16) + 's';
+  p.style.animationDelay    = (Math.random() * 18) + 's';
+  petalsLayer.appendChild(p);
+}
+
+/* ── BUBBLES ───────────────────────────────────────────────────────────── */
+const bubblesEl = document.getElementById('bubbles');
+for (let i = 0; i < 10; i++) {
+  const b = document.createElement('div');
+  b.className = 'bubble';
+  const size = 20 + Math.random() * 70;
+  b.style.cssText = `width:${size}px;height:${size}px;left:${Math.random()*100}%;animation-duration:${10+Math.random()*14}s;animation-delay:${Math.random()*10}s`;
+  bubblesEl.appendChild(b);
+}
+</script>
 </body>
 </html>
