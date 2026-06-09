@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nathaly 🎀</title>
+<link href="https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Nunito:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bubblegum: #ff85a1;
+    --cotton: #ffd6e3;
+    --cream: #fff9fb;
+    --dark: #3d1c2e;
+    --accent: #ff4d77;
+  }
+
+  body {
+    min-height: 100vh;
+    background: var(--cream);
+    font-family: 'Nunito', sans-serif;
+    color: var(--dark);
+    overflow: hidden;
+  }
+
+  /* STICKER STYLE DECO */
+  .sticker {
+    position: fixed;
+    pointer-events: none;
+    user-select: none;
+    font-size: 2rem;
+    animation: wiggle 3s ease-in-out infinite;
+  }
+
+  .sticker:nth-child(1) { top: 5%; left: 3%; font-size: 3rem; animation-delay: 0s; }
+  .sticker:nth-child(2) { top: 8%; right: 5%; font-size: 2.5rem; animation-delay: 0.5s; }
+  .sticker:nth-child(3) { bottom: 15%; left: 5%; font-size: 2rem; animation-delay: 1s; }
+  .sticker:nth-child(4) { bottom: 10%; right: 6%; font-size: 2.8rem; animation-delay: 1.5s; }
+  .sticker:nth-child(5) { top: 40%; left: 1%; font-size: 1.8rem; animation-delay: 0.8s; }
+  .sticker:nth-child(6) { top: 35%; right: 2%; font-size: 1.8rem; animation-delay: 1.2s; }
+
+  @keyframes wiggle {
+    0%,100%{transform:rotate(-5deg) scale(1)}
+    50%{transform:rotate(5deg) scale(1.1)}
+  }
+
+  .bg-bubbles {
+    position: fixed;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  .bubble {
+    position: absolute;
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, rgba(255,210,230,0.8), rgba(255,133,161,0.2));
+    animation: floatBubble linear infinite;
+  }
+
+  @keyframes floatBubble {
+    0%{transform:translateY(100vh) scale(0);opacity:0}
+    10%{opacity:0.6}
+    90%{opacity:0.3}
+    100%{transform:translateY(-20px) scale(1);opacity:0}
+  }
+
+  .main-wrapper {
+    position: relative;
+    z-index: 10;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+  }
+
+  .card {
+    background: white;
+    border-radius: 30px;
+    padding: 0;
+    max-width: 480px;
+    width: 100%;
+    box-shadow:
+      0 0 0 3px var(--bubblegum),
+      0 0 0 6px white,
+      0 0 0 9px var(--cotton),
+      0 20px 60px rgba(255,133,161,0.25);
+    overflow: hidden;
+  }
+
+  .card-header {
+    background: linear-gradient(135deg, var(--bubblegum), var(--accent));
+    padding: 2rem;
+    text-align: center;
+    position: relative;
+  }
+
+  .card-header::after {
+    content: '';
+    position: absolute;
+    bottom: -20px;
+    left: 0; right: 0;
+    height: 40px;
+    background: white;
+    border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+  }
+
+  .card-header h1 {
+    font-family: 'Abril Fatface', serif;
+    font-size: 2.8rem;
+    color: white;
+    text-shadow: 3px 3px 0 rgba(180,40,80,0.3);
+    letter-spacing: -0.02em;
+  }
+
+  .card-header p {
+    color: rgba(255,255,255,0.9);
+    font-size: 0.95rem;
+    font-weight: 300;
+    margin-top: 0.3rem;
+  }
+
+  .card-body {
+    padding: 2.5rem 2rem 2rem;
+    text-align: center;
+  }
+
+  .img-container {
+    position: relative;
+    display: inline-block;
+    margin-bottom: 1.5rem;
+  }
+
+  .main-img {
+    width: 200px;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 5px solid var(--cotton);
+    box-shadow: 0 8px 32px rgba(255,133,161,0.3);
+    transition: all 0.4s ease;
+    display: block;
+  }
+
+  .main-img.bounce { animation: bounceImg 0.5s ease; }
+  @keyframes bounceImg {
+    0%{transform:scale(1)}30%{transform:scale(0.85)}60%{transform:scale(1.1)}100%{transform:scale(1)}
+  }
+
+  .img-badge {
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    background: var(--accent);
+    color: white;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    border: 3px solid white;
+    box-shadow: 0 2px 8px rgba(255,77,119,0.4);
+  }
+
+  .question {
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: var(--dark);
+    margin-bottom: 2rem;
+    min-height: 3em;
+    line-height: 1.5;
+    transition: all 0.3s;
+  }
+
+  .btns {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+  }
+
+  .btn-yes {
+    background: linear-gradient(135deg, var(--bubblegum), var(--accent));
+    color: white;
+    border: none;
+    padding: 0.85rem 2.2rem;
+    border-radius: 50px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 4px 0 #cc2255, 0 6px 16px rgba(255,77,119,0.3);
+    transition: all 0.2s;
+    letter-spacing: 0.03em;
+  }
+
+  .btn-yes:active {
+    transform: translateY(3px);
+    box-shadow: 0 1px 0 #cc2255;
+  }
+
+  .btn-yes:hover { transform: translateY(-2px); }
+
+  .btn-no {
+    background: white;
+    color: var(--bubblegum);
+    border: 2px solid var(--cotton);
+    padding: 0.85rem 2.2rem;
+    border-radius: 50px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    position: fixed;
+    box-shadow: 0 4px 0 var(--cotton);
+    letter-spacing: 0.03em;
+    transition: box-shadow 0.2s;
+  }
+
+  .img-strip {
+    display: flex;
+    justify-content: center;
+    gap: 0.8rem;
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 2px dashed var(--cotton);
+  }
+
+  .img-strip img {
+    width: 52px;
+    height: 52px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 2px solid var(--cotton);
+    opacity: 0.7;
+    transition: all 0.3s;
+  }
+
+  .img-strip img:hover { opacity: 1; transform: scale(1.15) rotate(-5deg); }
+
+  /* SUCCESS */
+  .success-screen {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: linear-gradient(135deg, #ffe0ec, #ffb6cc, #ffdde8);
+    z-index: 100;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1.5rem;
+  }
+
+  .success-screen.active { display: flex; }
+
+  .confetti-text {
+    font-family: 'Abril Fatface', serif;
+    font-size: clamp(3rem, 8vw, 5rem);
+    color: white;
+    text-shadow: 4px 4px 0 rgba(180,40,80,0.3);
+    text-align: center;
+    animation: popIn 0.7s cubic-bezier(0.34,1.56,0.64,1);
+  }
+
+  @keyframes popIn { from{transform:scale(0) rotate(-10deg)}to{transform:scale(1) rotate(0)} }
+
+  .success-screen img {
+    width: min(260px, 75vw);
+    border-radius: 20px;
+    border: 5px solid white;
+    box-shadow: 0 16px 40px rgba(255,77,119,0.3);
+    animation: popIn 0.7s 0.2s both cubic-bezier(0.34,1.56,0.64,1);
+  }
+
+  .success-msg {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: var(--accent);
+    animation: popIn 0.7s 0.4s both cubic-bezier(0.34,1.56,0.64,1);
+  }
+
+  /* HACKER */
+  .hacker-screen {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: #050505;
+    z-index: 100;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+  }
+
+  .hacker-screen.active { display: flex; }
+
+  .hacker-screen pre {
+    color: #0f0;
+    font-size: clamp(4px, 0.9vw, 10px);
+    line-height: 1.1;
+    text-shadow: 0 0 5px #0f0;
+  }
+
+  .hacker-screen .msg {
+    color: #0f0;
+    font-family: 'Courier New', monospace;
+    font-size: 1.1rem;
+    letter-spacing: 0.15em;
+    text-shadow: 0 0 10px #0f0;
+    animation: pulse 1.5s ease-in-out infinite;
+  }
+
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+</style>
+</head>
+<body>
+
+<div class="sticker">🎀</div>
+<div class="sticker">✨</div>
+<div class="sticker">🌸</div>
+<div class="sticker">💕</div>
+<div class="sticker">⭐</div>
+<div class="sticker">🍓</div>
+
+<div class="bg-bubbles" id="bubbles"></div>
+
+<div class="main-wrapper">
+  <div class="card">
+    <div class="card-header">
+      <h1>Nathaly! 🎀</h1>
+      <p>Tengo algo muy importante que preguntarte...</p>
+    </div>
+    <div class="card-body">
+      <div class="img-container">
+        <img id="mainImg" src="../assets/cute/bag miffy.jpg" class="main-img" alt="">
+        <div class="img-badge">🎬</div>
+      </div>
+      <p class="question" id="questionText">¿Quieres venir a ver una película conmigo en mi casa? 🍿</p>
+      <div class="btns">
+        <button class="btn-yes" onclick="sayYes()">¡Claro que sí! 💕</button>
+        <button class="btn-no" id="noBtn" onclick="sayNo()">No...</button>
+      </div>
+      <div class="img-strip">
+        <img src="../assets/cute/hello kitty heart.jpg" alt="">
+        <img src="../assets/cute/pink miffi.jpg" alt="">
+        <img src="../assets/cute/pink balloon mifi .jpg" alt="">
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SUCCESS -->
+<div class="success-screen" id="successScreen">
+  <div class="confetti-text">¡YESSSSS! 🎉</div>
+  <img src="../assets/success/GyRpijUWAAAjj4j.jpg" alt="success">
+  <p class="success-msg">Sabía que dirías que sí 🥰🍿</p>
+</div>
+
+<!-- HACKER -->
+<div class="hacker-screen" id="hackerScreen">
+  <pre>⠀⠀⠀⠀⠀⠀⠀⠄⣀⠢⢀⣤⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣄⠀⡔⢀⠂⡜⢭⢻⣍⢯⡻⣝⣿⣿⡿⣟⠂
+⠀⠀⠀⠀⠀⠀⠀⠄⠀⣦⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⡔⡀⢂⠜⣪⢗⡾⣶⡽⣾⣟⣯⠛⠀⠀
+⠀⠀⠀⠀⠀⠄⠀⠠⣶⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣔⠨⡸⡝⣯⣳⢏⣿⠳⠉⠀⢠⣬⡶
+⠠⣓⢤⣂⣄⣀⢀⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡆⠁⣞⡱⣝⠎⠀⢀⠠⣥⠳⡞⡹
+⠀⡄⢉⠲⢿⣼⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡔⣧⡽⠋⠀⣰⣶⣻⣶⣿⢾⣷
+⢤⡈⠉⠲⢤⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠁⢀⡴⢏⡳⢮⡿⣽⣞⠻⡜
+⠒⣭⠳⢶⣼⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⢿⡙⠮⣜⣯⡽⣳⢌⡓⠈
+⡸⣰⢋⣷⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣻⢿⣻⣿⡽⣗⠋⠄⠀
+⠣⢇⢟⣸⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣧⢟⡿⢣⣟⡻⠘⠀⠀⠀
+⠱⡊⠤⣸⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠨⠗⠋⣁⣤⠖⠊⢁⣀
+⠀⠁⠂⢹⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡏⠀⠀⠀⠀⣿⡂⠹⣿⣿⣿⣿⣿⠙⣿⣿⣿⣿⣿⣿⣿⣿⡿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠄⠒⢋⣉⡤⣔⣮⣽⣾
+⢢⠣⣌⢼⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠀⠀⠀⠀⢰⣿⡅⠀⣿⣿⣿⣿⣿⠀⠸⢿⣹⣿⣿⣿⣿⣿⡇⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣶⣻⣿⣿⣿⣿⣿⣿⣿
+⢃⡉⠠⢸⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡟⣼⢹⠀⠀⠀⠀⣾⠿⡇⠀⣿⣿⣿⣿⡏⠀⠀⣞⣧⣻⠟⢿⣿⣿⢠⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⣧⠱⣌⣳⣽⣻⣿⣿⣻
+⠀⢒⡕⣺⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠁⡇⠈⣇⠀⠀⠀⠈⡆⢳⠀⠇⡟⠋⠉⠀⠀⠀⠃⢙⣠⣤⣤⣼⣯⣚⣟⢸⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠀⠌⠑⠌⢳⠛⡛⠏⠛⠉
+⡘⢷⣌⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡟⠉⢻⣀⣧⣤⣽⣦⣤⣄⠀⠰⡀⠃⠀⠀⠀⠀⠀⠀⡴⠟⠛⣉⣉⡉⠉⠈⠉⠉⠉⠋⢻⣿⣿⣿⣿⣿⣿⣿⣿⣿⠀⢈⠈⠈⠁⠛⠀⠀⠀⣒
+⠉⢣⡛⣿⣿⣿⣿⣿⣿⣿⣿⣿⡧⠖⠛⠉⠉⠉⠀⠀⠐⠒⢢⡄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡾⣠⣲⣾⣿⢿⣷⢶⡄⠀⠀⣽⣿⣿⣿⣿⡿⠟⣿⣿⣿⣿⣿⠛⢁⣤⡶⠿⠛⠋
+⠀⠀⠌⢽⣿⣿⣿⣿⣿⣿⣿⣿⡷⠀⠀⠀⣠⣶⣶⣿⣟⣿⣶⡅⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠃⢿⣿⣿⣿⣿⠀⣿⡀⠀⢻⣬⣙⡻⡿⣡⣾⣿⣿⡍⠈⣀⣤⣬⣤⣶⣲⣶⣿
+⠀⢈⠐⡀⢻⣫⢿⣿⣿⣿⣿⠘⢧⠁⠀⣻⡏⠸⣿⣿⣿⣿⠏⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠑⢄⣉⣛⣋⣡⡴⠃⠀⠀⣿⣿⣿⠟⣠⡛⢿⣿⣿⣷⣲⣽⣿⣿⣷⣾⣷⣿⣿
+⠀⠀⢀⠐⡀⢃⡈⣿⢿⣿⣿⣟⡆⠀⠀⠉⠿⣦⣈⣉⣉⠤⠚⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⡟⣡⣶⣿⣿⣾⣿⣿⣿⢿⡿⣿⣿⡿⠿⠛⣋⣡
+⠠⠐⡀⢢⣶⣿⢧⠻⣯⣿⣯⡛⢿⡄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⠘⠐⠂⡁⠤⠔⢂⣉⣤⡴
+⣀⠥⠌⣳⢯⣟⣮⣗⣾⣟⣿⣿⣦⣭⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⠂⣈⠥⡔⡤⣍⠣⣝⢾⡹
+⠀⠀⠀⠠⠈⠉⠈⠉⠉⠉⣨⣿⣿⣿⣯⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣿⣿⣿⣿⣿⣿⣿⣿⡟⠻⢞⣿⣝⣳⢎⢳⢻⡮⣕
+⠀⠀⢀⠀⡀⠀⠀⣀⣴⣾⣿⣿⣿⣿⣿⣧⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣰⣿⣿⣿⣿⣿⣿⣿⣿⣿⡗⢠⠘⡼⣽⣛⡞⠦⣧⢻⣽
+⠀⢈⠀⡀⡀⢤⠞⡉⢭⣹⣿⣿⣿⣿⣿⣿⣿⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠈⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣴⣿⣿⣿⣿⣿⣿⣿⣿⣟⣿⣍⣣⢾⣵⣯⣷⣽⣦⣑⣯⢿
+⠀⠂⣴⣾⡟⣧⠊⡔⢢⠛⣿⣿⣿⣿⣿⣿⣿⣿⣷⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠐⠒⠂⠀⠀⠀⠀⠀⠀⠀⠀⠀⢠⣾⣿⣿⣿⣿⣿⣿⣿⣿⡟⠉⣯⢹⣽⢻⣿⣿⣿⣿⣿⣿⣿⣿
+⣶⣟⠳⣏⡿⣎⠳⣈⡜⣺⣿⠿⢿⣝⡿⣫⢟⣽⣿⣿⠻⣦⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⠔⠛⣿⠿⣟⢩⢾⣿⣿⣿⣿⣇⠾⣜⡧⣯⣟⣿⣿⣿⣿⣿⣿⣿⣿
+⠋⢀⢱⣫⣟⢾⡹⢴⡸⣵⡏⣂⢾⡿⣽⣹⣟⣾⣿⡟⢠⡇⠀⣹⠂⠄⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣷⣣⢟⡿⣾⣿⣿⣿⣿⢌⠫⢝⡻⣵⢻⡟⣿⢿⣿⢿⡿⣿⠿
+⠀⢢⠞⣴⢯⢯⣝⣦⢳⡝⡶⣭⣿⣽⣳⣟⡾⣽⡟⢀⡟⠀⢀⡿⠀⠀⠀⠁⠠⠤⠀⠀⠀⠤⠐⠀⠀⠀⠀⠀⠀⠀⢸⡗⠈⠭⣿⣿⣿⣿⡿⢌⠣⡀⡐⢈⠃⠚⠦⣉⠂⠣⠜⡄⢋
+⣜⣷⢻⡜⣯⣾⡞⣥⣓⢾⡽⢎⡷⢯⡷⣯⢟⣽⠃⣸⠁⠀⡼⠃⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢻⡄⢹⣿⣿⣿⣿⢃⡮⡑⢰⢠⣂⡜⣦⡴⣱⣎⣴⣩⡜⣦
+⣿⣯⢷⡻⣏⣷⣟⠶⣙⠮⡙⢪⠜⣯⢽⣯⣿⠃⠄⢃⣠⠞⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠹⣾⣿⣿⣿⡇⠢⢡⡙⢦⡓⡼⣽⣾⣿⣿⣿⣿⣷⣿⣿
+⣿⡹⢇⡳⡹⣞⠘⡈⢅⠢⢁⠂⡘⠤⣋⣶⣡⠴⠚⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⠰⡁⢆⠘⣡⠻⣽⣳⣿⣿⣿⣿⢿⣿⣿⣿
+⢣⠝⡢⢍⠱⢈⣂⣌⡤⠦⠶⠶⠞⠛⠋⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢰⣿⣿⣿⠛⠷⣭⣂⠌⢠⠓⡴⣻⣿⣿⣿⣿⣿⣿⣯⣿
+⣇⢾⡱⠞⠈⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣸⣿⣿⡇⠀⠀⠀⠉⠛⠳⠿⣶⣽⣿⣿⣿⣿⣿⣿⣿⣿</pre>
+  <div class="msg">congrats you hacker 💚</div>
+</div>
+
+<script>
+const messages = [
+  "¿Quieres venir a ver una película conmigo en mi casa? 🍿",
+  "Vaaamos... di que sí 🥺",
+  "Por favor, por favor!! 🙏",
+  "¡¿EN SERIO DIJISTE QUE NO?! 😭",
+  "NECESITO que digas que sí 😤",
+  "NATHALY. POR. FAVOR. 😡🎀",
+  "Me estás rompiendo el corazón 💔",
+  "¿Y si te traigo muchas palomitas? 🍿🍿🍿",
+  "NATHALYYYYYYY 😭😭😭"
+];
+
+const creepyImgs = [
+  "../assets/creepy pasta/hello kitty miedo .jpg",
+  "../assets/creepy pasta/images.jpg",
+  "../assets/creepy pasta/miffy miedo.jpg"
+];
+
+let noCount = 0;
+const noBtn = document.getElementById('noBtn');
+const mainImg = document.getElementById('mainImg');
+const questionText = document.getElementById('questionText');
+
+noBtn.style.left = '62%';
+noBtn.style.top = '68%';
+
+function moveNoButton() {
+  const x = 80 + Math.random() * (window.innerWidth - 200);
+  const y = 80 + Math.random() * (window.innerHeight - 160);
+  noBtn.style.left = x + 'px';
+  noBtn.style.top = y + 'px';
+}
+
+noBtn.addEventListener('mouseover', moveNoButton);
+
+function sayNo() {
+  noCount++;
+  questionText.textContent = messages[Math.min(noCount, messages.length - 1)];
+  const imgIdx = (noCount - 1) % creepyImgs.length;
+  mainImg.src = creepyImgs[imgIdx];
+  mainImg.classList.remove('bounce');
+  void mainImg.offsetWidth;
+  mainImg.classList.add('bounce');
+  moveNoButton();
+  if (noCount >= 5) document.getElementById('hackerScreen').classList.add('active');
+}
+
+function sayYes() {
+  document.getElementById('successScreen').classList.add('active');
+}
+
+// Bubbles
+const bubblesEl = document.getElementById('bubbles');
+for (let i = 0; i < 12; i++) {
+  const b = document.createElement('div');
+  b.className = 'bubble';
+  const size = 20 + Math.random() * 80;
+  b.style.cssText = `width:${size}px;height:${size}px;left:${Math.random()*100}%;animation-duration:${8+Math.random()*12}s;animation-delay:${Math.random()*8}s`;
+  bubblesEl.appendChild(b);
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nathaly 🎀</title>
+<link href="https://fonts.googleapis.com/css2?family=Gilda+Display&family=Raleway:wght@200;300;400&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --rose: #e8a0b8;
+    --mist: #f7eef3;
+    --dust: #d4849d;
+    --deep: #8c3a56;
+    --white: #fefcfd;
+  }
+
+  body {
+    min-height: 100vh;
+    background: var(--white);
+    font-family: 'Raleway', sans-serif;
+    font-weight: 300;
+    color: var(--deep);
+    overflow: hidden;
+    position: relative;
+  }
+
+  /* COQUETTE NOISE TEXTURE */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.5;
+  }
+
+  .bg-soft {
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 60% 50% at 10% 15%, rgba(232,160,184,0.15) 0%, transparent 60%),
+      radial-gradient(ellipse 50% 60% at 90% 85%, rgba(212,132,157,0.12) 0%, transparent 60%),
+      radial-gradient(ellipse 40% 40% at 50% 50%, rgba(247,238,243,0.5) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .ribbons {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1;
+    overflow: hidden;
+  }
+
+  .ribbon {
+    position: absolute;
+    border: 1px solid rgba(232,160,184,0.2);
+    border-radius: 50%;
+  }
+
+  .ribbon:nth-child(1) { width: 600px; height: 600px; top: -200px; left: -200px; }
+  .ribbon:nth-child(2) { width: 400px; height: 400px; bottom: -100px; right: -100px; }
+  .ribbon:nth-child(3) { width: 200px; height: 200px; top: 30%; right: 5%; border-style: dashed; }
+  .ribbon:nth-child(4) { width: 150px; height: 150px; bottom: 20%; left: 5%; border-style: dashed; }
+
+  /* PHOTO CORNERS */
+  .corner {
+    position: fixed;
+    width: 30px;
+    height: 30px;
+    pointer-events: none;
+    z-index: 2;
+  }
+
+  .corner::before, .corner::after {
+    content: '';
+    position: absolute;
+    background: var(--dust);
+    opacity: 0.4;
+  }
+
+  .corner-tl { top: 20px; left: 20px; }
+  .corner-tr { top: 20px; right: 20px; }
+  .corner-bl { bottom: 20px; left: 20px; }
+  .corner-br { bottom: 20px; right: 20px; }
+
+  .corner-tl::before { top: 0; left: 0; width: 100%; height: 2px; }
+  .corner-tl::after  { top: 0; left: 0; width: 2px; height: 100%; }
+  .corner-tr::before { top: 0; right: 0; width: 100%; height: 2px; }
+  .corner-tr::after  { top: 0; right: 0; width: 2px; height: 100%; }
+  .corner-bl::before { bottom: 0; left: 0; width: 100%; height: 2px; }
+  .corner-bl::after  { bottom: 0; left: 0; width: 2px; height: 100%; }
+  .corner-br::before { bottom: 0; right: 0; width: 100%; height: 2px; }
+  .corner-br::after  { bottom: 0; right: 0; width: 2px; height: 100%; }
+
+  .scene {
+    position: relative;
+    z-index: 10;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+  }
+
+  .polaroid-stack {
+    position: absolute;
+    right: 8%;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 220px;
+  }
+
+  .polaroid {
+    background: white;
+    padding: 10px 10px 30px;
+    box-shadow: 2px 4px 16px rgba(140,58,86,0.12);
+    position: absolute;
+    transition: transform 0.3s ease;
+  }
+
+  .polaroid:nth-child(1) { transform: rotate(-6deg) translateY(-10px); z-index: 3; }
+  .polaroid:nth-child(2) { transform: rotate(4deg) translateY(5px); z-index: 2; }
+  .polaroid:nth-child(3) { transform: rotate(-2deg) translateY(20px); z-index: 1; }
+  .polaroid:hover { transform: rotate(0deg) scale(1.05) !important; z-index: 4; }
+
+  .polaroid img {
+    width: 200px;
+    height: 200px;
+    object-fit: cover;
+    display: block;
+  }
+
+  .content {
+    max-width: 440px;
+    text-align: left;
+  }
+
+  .eyebrow {
+    font-size: 0.7rem;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--rose);
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+  }
+
+  .eyebrow::before {
+    content: '';
+    display: block;
+    width: 30px;
+    height: 1px;
+    background: var(--rose);
+  }
+
+  h1 {
+    font-family: 'Gilda Display', serif;
+    font-size: clamp(3rem, 6vw, 5rem);
+    line-height: 1.0;
+    color: var(--deep);
+    margin-bottom: 1.5rem;
+    font-weight: 400;
+  }
+
+  h1 span { color: var(--dust); font-style: italic; }
+
+  .divider {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    color: var(--rose);
+    font-size: 0.85rem;
+    letter-spacing: 0.1em;
+  }
+
+  .divider::before, .divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--rose), transparent);
+  }
+
+  #questionText {
+    font-size: 1rem;
+    line-height: 1.8;
+    color: #a05070;
+    margin-bottom: 2.5rem;
+    min-height: 4em;
+    transition: all 0.4s ease;
+    font-weight: 300;
+    letter-spacing: 0.02em;
+  }
+
+  .actions {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+  }
+
+  .btn-yes {
+    background: var(--deep);
+    color: white;
+    border: none;
+    padding: 0.9rem 2.5rem;
+    font-family: 'Raleway', sans-serif;
+    font-weight: 400;
+    font-size: 0.85rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .btn-yes::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--dust);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s ease;
+  }
+
+  .btn-yes:hover::after { transform: scaleX(1); }
+  .btn-yes span { position: relative; z-index: 1; }
+
+  .btn-no {
+    background: transparent;
+    color: var(--rose);
+    border: none;
+    border-bottom: 1px solid var(--rose);
+    padding: 0.3rem 0;
+    font-family: 'Raleway', sans-serif;
+    font-weight: 300;
+    font-size: 0.85rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    cursor: pointer;
+    position: fixed;
+    transition: color 0.2s, border-color 0.2s;
+  }
+
+  .btn-no:hover { color: var(--dust); border-color: var(--dust); }
+
+  .main-img-polaroid {
+    position: absolute;
+    left: 7%;
+    top: 50%;
+    transform: translateY(-50%) rotate(-3deg);
+    background: white;
+    padding: 12px 12px 40px;
+    box-shadow: 4px 8px 24px rgba(140,58,86,0.15);
+    z-index: 5;
+    transition: all 0.5s ease;
+  }
+
+  .main-img-polaroid img {
+    width: 200px;
+    height: 200px;
+    object-fit: cover;
+    display: block;
+  }
+
+  .main-img-polaroid.swap { animation: swapPolaroid 0.5s ease; }
+  @keyframes swapPolaroid {
+    0%{transform:translateY(-50%) rotate(-3deg) scale(1)}
+    50%{transform:translateY(-50%) rotate(10deg) scale(0.8) translateX(-30px);opacity:0.5}
+    100%{transform:translateY(-50%) rotate(-3deg) scale(1);opacity:1}
+  }
+
+  /* SUCCESS */
+  .success-screen {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: var(--white);
+    z-index: 100;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2rem;
+  }
+
+  .success-screen.active { display: flex; }
+
+  .success-screen .eyebrow2 {
+    font-size: 0.7rem;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: var(--rose);
+  }
+
+  .success-screen h2 {
+    font-family: 'Gilda Display', serif;
+    font-size: clamp(3rem, 7vw, 5rem);
+    color: var(--deep);
+    text-align: center;
+  }
+
+  .success-screen .success-polaroid {
+    background: white;
+    padding: 12px 12px 50px;
+    box-shadow: 6px 12px 32px rgba(140,58,86,0.15);
+    transform: rotate(2deg);
+    animation: dropIn 0.7s cubic-bezier(0.34,1.56,0.64,1);
+  }
+
+  @keyframes dropIn { from{transform:rotate(2deg) translateY(-60px);opacity:0} to{transform:rotate(2deg) translateY(0);opacity:1} }
+
+  .success-screen .success-polaroid img {
+    width: min(240px, 70vw);
+    height: min(240px, 70vw);
+    object-fit: cover;
+    display: block;
+  }
+
+  /* HACKER */
+  .hacker-screen {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: #02020a;
+    z-index: 100;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1.5rem;
+  }
+
+  .hacker-screen.active { display: flex; }
+
+  .hacker-screen pre {
+    color: #33ff88;
+    font-size: clamp(4px, 0.85vw, 9px);
+    line-height: 1.1;
+    text-shadow: 0 0 4px #33ff88;
+  }
+
+  .hacker-screen .msg {
+    color: #33ff88;
+    font-family: 'Raleway', sans-serif;
+    font-weight: 200;
+    font-size: 1rem;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    text-shadow: 0 0 12px #33ff88;
+  }
+</style>
+</head>
+<body>
+
+<div class="bg-soft"></div>
+<div class="ribbons">
+  <div class="ribbon"></div>
+  <div class="ribbon"></div>
+  <div class="ribbon"></div>
+  <div class="ribbon"></div>
+</div>
+<div class="corner corner-tl"></div>
+<div class="corner corner-tr"></div>
+<div class="corner corner-bl"></div>
+<div class="corner corner-br"></div>
+
+<!-- Floating polaroid with main image -->
+<div class="main-img-polaroid" id="mainPolaroid">
+  <img id="mainImg" src="../assets/cute/pink balloon mifi .jpg" alt="">
+</div>
+
+<!-- Stacked polaroids right -->
+<div class="polaroid-stack">
+  <div class="polaroid"><img src="../assets/cute/hello kitty heart.jpg" alt=""></div>
+  <div class="polaroid"><img src="../assets/cute/bag miffy.jpg" alt=""></div>
+  <div class="polaroid"><img src="../assets/cute/pink miffi.jpg" alt=""></div>
+</div>
+
+<div class="scene">
+  <div class="content">
+    <div class="eyebrow">una pregunta especial 🎀</div>
+    <h1>Nathaly,<br><span>¿vendrías?</span></h1>
+    <div class="divider">🌸</div>
+    <p id="questionText">¿Quieres venir a ver una película conmigo en mi casa esta noche? 🎬🍿</p>
+    <div class="actions">
+      <button class="btn-yes" onclick="sayYes()"><span>Sí, quiero 💕</span></button>
+      <button class="btn-no" id="noBtn" onclick="sayNo()">No...</button>
+    </div>
+  </div>
+</div>
+
+<!-- SUCCESS -->
+<div class="success-screen" id="successScreen">
+  <div class="eyebrow2">🌸 respuesta confirmada 🌸</div>
+  <h2>¡Perfecto!<br>Lo sabía</h2>
+  <div class="success-polaroid">
+    <img src="../assets/success/GyRpijUWAAAjj4j.jpg" alt="success">
+  </div>
+</div>
+
+<!-- HACKER -->
+<div class="hacker-screen" id="hackerScreen">
+  <pre>⠀⠀⠀⠀⠀⠀⠀⠄⣀⠢⢀⣤⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣄⠀⡔⢀⠂⡜⢭⢻⣍⢯⡻⣝⣿⣿⡿⣟⠂
+⠀⠀⠀⠀⠀⠀⠀⠄⠀⣦⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⡔⡀⢂⠜⣪⢗⡾⣶⡽⣾⣟⣯⠛⠀⠀
+⠀⠀⠀⠀⠀⠄⠀⠠⣶⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣔⠨⡸⡝⣯⣳⢏⣿⠳⠉⠀⢠⣬⡶
+⠠⣓⢤⣂⣄⣀⢀⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡆⠁⣞⡱⣝⠎⠀⢀⠠⣥⠳⡞⡹
+⠀⡄⢉⠲⢿⣼⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡔⣧⡽⠋⠀⣰⣶⣻⣶⣿⢾⣷
+⢤⡈⠉⠲⢤⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠁⢀⡴⢏⡳⢮⡿⣽⣞⠻⡜
+⠒⣭⠳⢶⣼⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⢿⡙⠮⣜⣯⡽⣳⢌⡓⠈
+⡸⣰⢋⣷⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣻⢿⣻⣿⡽⣗⠋⠄⠀
+⠣⢇⢟⣸⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣧⢟⡿⢣⣟⡻⠘⠀⠀⠀
+⠱⡊⠤⣸⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠨⠗⠋⣁⣤⠖⠊⢁⣀
+⠀⠁⠂⢹⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡏⠀⠀⠀⠀⣿⡂⠹⣿⣿⣿⣿⣿⠙⣿⣿⣿⣿⣿⣿⣿⣿⡿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠄⠒⢋⣉⡤⣔⣮⣽⣾
+⢢⠣⣌⢼⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠀⠀⠀⠀⢰⣿⡅⠀⣿⣿⣿⣿⣿⠀⠸⢿⣹⣿⣿⣿⣿⣿⡇⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣶⣻⣿⣿⣿⣿⣿⣿⣿
+⢃⡉⠠⢸⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡟⣼⢹⠀⠀⠀⠀⣾⠿⡇⠀⣿⣿⣿⣿⡏⠀⠀⣞⣧⣻⠟⢿⣿⣿⢠⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⣧⠱⣌⣳⣽⣻⣿⣿⣻
+⠀⢒⡕⣺⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠁⡇⠈⣇⠀⠀⠀⠈⡆⢳⠀⠇⡟⠋⠉⠀⠀⠀⠃⢙⣠⣤⣤⣼⣯⣚⣟⢸⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠀⠌⠑⠌⢳⠛⡛⠏⠛⠉
+⡘⢷⣌⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡟⠉⢻⣀⣧⣤⣽⣦⣤⣄⠀⠰⡀⠃⠀⠀⠀⠀⠀⠀⡴⠟⠛⣉⣉⡉⠉⠈⠉⠉⠉⠋⢻⣿⣿⣿⣿⣿⣿⣿⣿⣿⠀⢈⠈⠈⠁⠛⠀⠀⠀⣒
+⠉⢣⡛⣿⣿⣿⣿⣿⣿⣿⣿⣿⡧⠖⠛⠉⠉⠉⠀⠀⠐⠒⢢⡄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡾⣠⣲⣾⣿⢿⣷⢶⡄⠀⠀⣽⣿⣿⣿⣿⡿⠟⣿⣿⣿⣿⣿⠛⢁⣤⡶⠿⠛⠋
+⠀⠀⠌⢽⣿⣿⣿⣿⣿⣿⣿⣿⡷⠀⠀⠀⣠⣶⣶⣿⣟⣿⣶⡅⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠃⢿⣿⣿⣿⣿⠀⣿⡀⠀⢻⣬⣙⡻⡿⣡⣾⣿⣿⡍⠈⣀⣤⣬⣤⣶⣲⣶⣿
+⠀⢈⠐⡀⢻⣫⢿⣿⣿⣿⣿⠘⢧⠁⠀⣻⡏⠸⣿⣿⣿⣿⠏⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠑⢄⣉⣛⣋⣡⡴⠃⠀⠀⣿⣿⣿⠟⣠⡛⢿⣿⣿⣷⣲⣽⣿⣿⣷⣾⣷⣿⣿
+⠀⠀⢀⠐⡀⢃⡈⣿⢿⣿⣿⣟⡆⠀⠀⠉⠿⣦⣈⣉⣉⠤⠚⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⡟⣡⣶⣿⣿⣾⣿⣿⣿⢿⡿⣿⣿⡿⠿⠛⣋⣡
+⠠⠐⡀⢢⣶⣿⢧⠻⣯⣿⣯⡛⢿⡄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⠘⠐⠂⡁⠤⠔⢂⣉⣤⡴
+⣀⠥⠌⣳⢯⣟⣮⣗⣾⣟⣿⣿⣦⣭⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⣿⣿⣿⣿⣿⠂⣈⠥⡔⡤⣍⠣⣝⢾⡹
+⠀⠀⠀⠠⠈⠉⠈⠉⠉⠉⣨⣿⣿⣿⣯⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣿⣿⣿⣿⣿⣿⣿⣿⡟⠻⢞⣿⣝⣳⢎⢳⢻⡮⣕
+⠀⠀⢀⠀⡀⠀⠀⣀⣴⣾⣿⣿⣿⣿⣿⣧⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣰⣿⣿⣿⣿⣿⣿⣿⣿⣿⡗⢠⠘⡼⣽⣛⡞⠦⣧⢻⣽
+⠀⢈⠀⡀⡀⢤⠞⡉⢭⣹⣿⣿⣿⣿⣿⣿⣿⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠈⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣴⣿⣿⣿⣿⣿⣿⣿⣿⣟⣿⣍⣣⢾⣵⣯⣷⣽⣦⣑⣯⢿
+⠀⠂⣴⣾⡟⣧⠊⡔⢢⠛⣿⣿⣿⣿⣿⣿⣿⣿⣷⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠐⠒⠂⠀⠀⠀⠀⠀⠀⠀⠀⠀⢠⣾⣿⣿⣿⣿⣿⣿⣿⣿⡟⠉⣯⢹⣽⢻⣿⣿⣿⣿⣿⣿⣿⣿
+⣶⣟⠳⣏⡿⣎⠳⣈⡜⣺⣿⠿⢿⣝⡿⣫⢟⣽⣿⣿⠻⣦⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⠔⠛⣿⠿⣟⢩⢾⣿⣿⣿⣿⣇⠾⣜⡧⣯⣟⣿⣿⣿⣿⣿⣿⣿⣿
+⠋⢀⢱⣫⣟⢾⡹⢴⡸⣵⡏⣂⢾⡿⣽⣹⣟⣾⣿⡟⢠⡇⠀⣹⠂⠄⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣷⣣⢟⡿⣾⣿⣿⣿⣿⢌⠫⢝⡻⣵⢻⡟⣿⢿⣿⢿⡿⣿⠿
+⠀⢢⠞⣴⢯⢯⣝⣦⢳⡝⡶⣭⣿⣽⣳⣟⡾⣽⡟⢀⡟⠀⢀⡿⠀⠀⠀⠁⠠⠤⠀⠀⠀⠤⠐⠀⠀⠀⠀⠀⠀⠀⢸⡗⠈⠭⣿⣿⣿⣿⡿⢌⠣⡀⡐⢈⠃⠚⠦⣉⠂⠣⠜⡄⢋
+⣜⣷⢻⡜⣯⣾⡞⣥⣓⢾⡽⢎⡷⢯⡷⣯⢟⣽⠃⣸⠁⠀⡼⠃⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢻⡄⢹⣿⣿⣿⣿⢃⡮⡑⢰⢠⣂⡜⣦⡴⣱⣎⣴⣩⡜⣦
+⣿⣯⢷⡻⣏⣷⣟⠶⣙⠮⡙⢪⠜⣯⢽⣯⣿⠃⠄⢃⣠⠞⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠹⣾⣿⣿⣿⡇⠢⢡⡙⢦⡓⡼⣽⣾⣿⣿⣿⣿⣷⣿⣿
+⣿⡹⢇⡳⡹⣞⠘⡈⢅⠢⢁⠂⡘⠤⣋⣶⣡⠴⠚⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⣿⣿⠰⡁⢆⠘⣡⠻⣽⣳⣿⣿⣿⣿⢿⣿⣿⣿
+⢣⠝⡢⢍⠱⢈⣂⣌⡤⠦⠶⠶⠞⠛⠋⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢰⣿⣿⣿⠛⠷⣭⣂⠌⢠⠓⡴⣻⣿⣿⣿⣿⣿⣿⣯⣿
+⣇⢾⡱⠞⠈⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣸⣿⣿⡇⠀⠀⠀⠉⠛⠳⠿⣶⣽⣿⣿⣿⣿⣿⣿⣿⣿</pre>
+  <div class="msg">congrats you hacker 💚</div>
+</div>
+
+<script>
+const messages = [
+  "¿Quieres venir a ver una película conmigo en mi casa esta noche? 🎬🍿",
+  "Vamos, di que sí 🥺",
+  "Por favor por favor 🙏",
+  "¡¿En serio dijiste que no?! 😭",
+  "NATHALY por favor 😤",
+  "Me estás partiendo el corazón 💔",
+  "¿Y si traigo palomitas? 🍿🍿",
+  "NATHALYYYYYYY 😭😭😭"
+];
+
+const creepyImgs = [
+  "../assets/creepy pasta/hello kitty miedo .jpg",
+  "../assets/creepy pasta/images.jpg",
+  "../assets/creepy pasta/miffy miedo.jpg"
+];
+
+let noCount = 0;
+const noBtn = document.getElementById('noBtn');
+const mainImg = document.getElementById('mainImg');
+const mainPolaroid = document.getElementById('mainPolaroid');
+const questionText = document.getElementById('questionText');
+
+noBtn.style.left = '60%';
+noBtn.style.top = '65%';
+
+function moveNoButton() {
+  const x = 100 + Math.random() * (window.innerWidth - 220);
+  const y = 80 + Math.random() * (window.innerHeight - 160);
+  noBtn.style.left = x + 'px';
+  noBtn.style.top = y + 'px';
+}
+
+noBtn.addEventListener('mouseover', moveNoButton);
+
+function sayNo() {
+  noCount++;
+  questionText.textContent = messages[Math.min(noCount, messages.length - 1)];
+  const imgIdx = (noCount - 1) % creepyImgs.length;
+  mainImg.src = creepyImgs[imgIdx];
+  mainPolaroid.classList.remove('swap');
+  void mainPolaroid.offsetWidth;
+  mainPolaroid.classList.add('swap');
+  moveNoButton();
+  if (noCount >= 5) document.getElementById('hackerScreen').classList.add('active');
+}
+
+function sayYes() {
+  document.getElementById('successScreen').classList.add('active');
+}
+</script>
+</body>
+</html>

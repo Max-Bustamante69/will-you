@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Design Selector 🎀</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    min-height: 100vh;
+    background: #0d0d0d;
+    font-family: 'Space Grotesk', sans-serif;
+    color: white;
+    padding: 3rem 2rem;
+  }
+
+  header {
+    text-align: center;
+    margin-bottom: 3rem;
+  }
+
+  header h1 {
+    font-size: clamp(1.5rem, 4vw, 2.5rem);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-bottom: 0.5rem;
+  }
+
+  header p {
+    color: rgba(255,255,255,0.4);
+    font-size: 0.9rem;
+    font-weight: 300;
+  }
+
+  .badge {
+    display: inline-block;
+    background: rgba(255,45,120,0.15);
+    border: 1px solid rgba(255,45,120,0.4);
+    color: #ff2d78;
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 0.3rem 0.8rem;
+    border-radius: 50px;
+    margin-bottom: 1rem;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .card {
+    background: #161616;
+    border: 1px solid #2a2a2a;
+    border-radius: 12px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    text-decoration: none;
+    color: inherit;
+    display: block;
+  }
+
+  .card:hover {
+    border-color: #ff2d78;
+    transform: translateY(-4px);
+    box-shadow: 0 12px 40px rgba(255,45,120,0.15);
+  }
+
+  .preview {
+    height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    font-size: 4rem;
+  }
+
+  .card:nth-child(1) .preview {
+    background: linear-gradient(135deg, #fde8f0, #ffc8dc);
+  }
+
+  .card:nth-child(2) .preview {
+    background: linear-gradient(135deg, #fff5f8, #ffd6e3);
+  }
+
+  .card:nth-child(3) .preview {
+    background: linear-gradient(135deg, #ffe0ec, #ff85a1);
+  }
+
+  .card:nth-child(4) .preview {
+    background: linear-gradient(135deg, #f7eef3, #e8a0b8);
+  }
+
+  .card:nth-child(5) .preview {
+    background: linear-gradient(135deg, #1a0a12, #3d0020);
+  }
+
+  .preview-label {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    background: rgba(0,0,0,0.3);
+    backdrop-filter: blur(8px);
+    padding: 0.3rem 0.7rem;
+    border-radius: 50px;
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    color: white;
+  }
+
+  .card-body {
+    padding: 1.2rem 1.5rem 1.5rem;
+  }
+
+  .card-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 0.4rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .card-desc {
+    font-size: 0.82rem;
+    color: rgba(255,255,255,0.45);
+    line-height: 1.5;
+    margin-bottom: 1rem;
+    font-weight: 300;
+  }
+
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+
+  .tag {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    padding: 0.2rem 0.6rem;
+    border-radius: 50px;
+    font-size: 0.7rem;
+    color: rgba(255,255,255,0.5);
+  }
+
+  .open-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    color: #ff2d78;
+    font-size: 0.8rem;
+    font-weight: 500;
+    margin-top: 0.8rem;
+    letter-spacing: 0.05em;
+  }
+
+  .open-btn svg {
+    width: 14px;
+    height: 14px;
+    transition: transform 0.2s;
+  }
+
+  .card:hover .open-btn svg { transform: translate(3px, -3px); }
+
+  footer {
+    text-align: center;
+    margin-top: 4rem;
+    color: rgba(255,255,255,0.2);
+    font-size: 0.75rem;
+    font-weight: 300;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="badge">design selector</div>
+  <h1>Elige tu diseño favorito 🎀</h1>
+  <p>5 versiones del mismo proyecto · Elige una y el resto se elimina</p>
+</header>
+
+<div class="grid">
+
+  <a href="./1/index.html" class="card">
+    <div class="preview">
+      🌸✨🌸
+      <div class="preview-label">Diseño 1</div>
+    </div>
+    <div class="card-body">
+      <div class="card-title">Romantic Blush <span>🎀</span></div>
+      <p class="card-desc">Fondo cremoso con pétalos cayendo, imágenes circulares flotantes en las esquinas, card central con bordes suaves. Tipografía Playfair Display italic. Muy dulce y romántico.</p>
+      <div class="tags">
+        <span class="tag">romántico</span>
+        <span class="tag">pétalos</span>
+        <span class="tag">card centrada</span>
+        <span class="tag">claro</span>
+      </div>
+      <div class="open-btn">Abrir diseño <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg></div>
+    </div>
+  </a>
+
+  <a href="./2/index.html" class="card">
+    <div class="preview">
+      🍵💕🍵
+      <div class="preview-label">Diseño 2</div>
+    </div>
+    <div class="card-body">
+      <div class="card-title">Editorial Split <span>✨</span></div>
+      <p class="card-desc">Layout 50/50 texto izquierda · imagen derecha. Blobs de blur de fondo. Borde inferior sólido en botones tipo brutalismo suave. DM Serif Display. Moderno y editorial.</p>
+      <div class="tags">
+        <span class="tag">editorial</span>
+        <span class="tag">dos columnas</span>
+        <span class="tag">minimalista</span>
+        <span class="tag">claro</span>
+      </div>
+      <div class="open-btn">Abrir diseño <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg></div>
+    </div>
+  </a>
+
+  <a href="./3/index.html" class="card">
+    <div class="preview">
+      🍓🎀🍓
+      <div class="preview-label">Diseño 3</div>
+    </div>
+    <div class="card-body">
+      <div class="card-title">Bubblegum Pop <span>🍬</span></div>
+      <p class="card-desc">Card con triple borde concéntrico, header en gradiente rosa. Stickers flotando con animación wiggle. Burbujas animadas de fondo. Abril Fatface. Muy divertido y kawaii.</p>
+      <div class="tags">
+        <span class="tag">kawaii</span>
+        <span class="tag">stickers</span>
+        <span class="tag">burbujas</span>
+        <span class="tag">playful</span>
+      </div>
+      <div class="open-btn">Abrir diseño <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg></div>
+    </div>
+  </a>
+
+  <a href="./4/index.html" class="card">
+    <div class="preview">
+      🌹💌🌹
+      <div class="preview-label">Diseño 4</div>
+    </div>
+    <div class="card-body">
+      <div class="card-title">Coquette Polaroid <span>🎞</span></div>
+      <p class="card-desc">Polaroids apilados flotando en los lados. Esquinas decorativas tipo foto antigua. Circles decorativos con borde. Gilda Display serif. Muy coquette, íntimo y elegante.</p>
+      <div class="tags">
+        <span class="tag">coquette</span>
+        <span class="tag">polaroids</span>
+        <span class="tag">elegante</span>
+        <span class="tag">claro</span>
+      </div>
+      <div class="open-btn">Abrir diseño <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg></div>
+    </div>
+  </a>
+
+  <a href="./5/index.html" class="card">
+    <div class="preview" style="color:white;">
+      🎬🔥🎬
+      <div class="preview-label">Diseño 5</div>
+    </div>
+    <div class="card-body">
+      <div class="card-title">Bold Dark Split <span>⚡</span></div>
+      <p class="card-desc">Fondo oscuro con split diagonal. Marquee de texto en la parte inferior. Bebas Neue enorme. Grid de imágenes pequeñas. Botón con clip-path. Contraste máximo, muy impactante.</p>
+      <div class="tags">
+        <span class="tag">oscuro</span>
+        <span class="tag">bold</span>
+        <span class="tag">marquee</span>
+        <span class="tag">diagonal</span>
+      </div>
+      <div class="open-btn">Abrir diseño <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg></div>
+    </div>
+  </a>
+
+</div>
+
+<footer>
+  <p>Cuando elijas tu favorito, dime el número y elimino el resto 🎀</p>
+</footer>
+
+</body>
+</html>
