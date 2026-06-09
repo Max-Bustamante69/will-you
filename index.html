@@ -637,6 +637,70 @@ body::after {
 .ticket-corner.bl { bottom:0.4rem; left:0.5rem;  transform: rotate(15deg); }
 .ticket-corner.br { bottom:0.4rem; right:0.5rem; transform: rotate(-15deg); }
 
+/* ── FULLSCREEN FLASH OVERLAY ────────────────────────────────────────── */
+#flashOverlay {
+  display: none;
+  position: fixed; inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+#flashOverlay.active {
+  display: block;
+  animation: flashBlink 0.2s steps(1) forwards;
+}
+@keyframes flashBlink {
+  0%   { opacity: 1; }
+  100% { opacity: 0; display: none; }
+}
+
+/* ── POWERUP BUBBLES ─────────────────────────────────────────────────── */
+.powerup-bubble {
+  position: fixed;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%,
+    rgba(255,255,255,0.95) 0%,
+    rgba(255,200,230,0.85) 40%,
+    rgba(255,100,160,0.6) 100%
+  );
+  border: 3px solid rgba(255,255,255,0.9);
+  box-shadow:
+    0 0 0 4px rgba(255,133,161,0.4),
+    0 0 20px rgba(255,100,160,0.5),
+    inset 0 -8px 16px rgba(255,100,160,0.3);
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 2px;
+  cursor: pointer !important;
+  z-index: 350;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  animation: bubbleFloat linear forwards;
+  touch-action: manipulation;
+}
+.powerup-bubble .bubble-icon  { font-size: 1.4rem; line-height: 1; }
+.powerup-bubble .bubble-text  { font-size: 0.6rem; font-weight: 800; color: #c4145a; letter-spacing: 0.05em; font-family:'Nunito',sans-serif; }
+.powerup-bubble .bubble-sub   { font-size: 0.5rem; font-weight: 600; color: rgba(180,20,80,0.7); font-family:'Nunito',sans-serif; text-align:center; line-height:1.2; padding:0 4px; }
+
+@keyframes bubbleFloat {
+  0%   { transform: translateY(0)   scale(1);   opacity: 0; }
+  5%   { opacity: 1; }
+  50%  { transform: translateY(-40vh) scale(1.05); opacity: 1; }
+  90%  { opacity: 0.7; }
+  100% { transform: translateY(-100vh) scale(0.8); opacity: 0; }
+}
+
+.powerup-bubble.popped {
+  animation: bubblePop 0.25s ease-out forwards !important;
+}
+@keyframes bubblePop {
+  0%   { transform: scale(1);   opacity: 1; }
+  50%  { transform: scale(1.6); opacity: 0.5; }
+  100% { transform: scale(0);   opacity: 0; }
+}
+
 /* ── HACKER SCREEN ────────────────────────────────────────────────────── */
 .hacker-screen {
   display:none; position:fixed; inset:0; background:#000;
@@ -645,13 +709,14 @@ body::after {
 }
 .hacker-screen.active { display:flex; }
 
-/* Hide everything except hacker screen and the NO button when Lain is active */
+/* Hide everything except hacker screen, NO button, and flash overlay when Lain is active */
 body:has(.hacker-screen.active) .main-wrapper,
 body:has(.hacker-screen.active) .bg-deco,
 body:has(.hacker-screen.active) .bg-bubbles,
 body:has(.hacker-screen.active) .petals-layer,
 body:has(.hacker-screen.active) .sticker,
 body:has(.hacker-screen.active) .hold-hint,
+body:has(.hacker-screen.active) .powerup-bubble,
 body:has(.hacker-screen.active) #cursor-dot,
 body:has(.hacker-screen.active) #cursor-ring {
   display: none !important;
@@ -936,6 +1001,9 @@ body:has(.hacker-screen.active) #cursor-ring {
   </div>
 </div>
 
+<!-- FULLSCREEN FLASH OVERLAY -->
+<div id="flashOverlay"></div>
+
 <!-- HACKER -->
 <div class="hacker-screen" id="hackerScreen" data-level="1">
   <pre>⠀⠀⠀⠀⠀⠀⠀⠄⣀⠢⢀⣤⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣄⠀⡔⢀⠂⡜⢭⢻⣍⢯⡻⣝⣿⣿⡿⣟⠂
@@ -1125,6 +1193,9 @@ noBtn.addEventListener('mouseover', () => {
 function sayNo() {
   noCount++;
 
+  // Flash fokiu image on every NO press
+  flashImage(fokiuImg);
+
   qText.textContent = messages[Math.min(noCount, messages.length - 1)];
 
   const imgIdx = (noCount - 1) % creepyImgs.length;
@@ -1146,6 +1217,9 @@ function sayNo() {
       startAutonomousMove();
       scheduleHint();
     }
+    // Start powerup bubbles + random flashes when movement begins
+    startPowerupBubbles();
+    scheduleRandomFlash();
   } else if (isMoving) {
     if (isTouch()) {
       // Each tap adds only 120ms — stays very hard to catch, max 1200ms
@@ -1168,11 +1242,17 @@ function sayNo() {
 /* ── SAY YES ───────────────────────────────────────────────────────────── */
 function sayYes() {
   stopAutonomousMove();
+  stopRandomFlash();
+  stopPowerupBubbles();
   clearTimeout(hintTimer);
   clearTimeout(hintHideTimer);
   holdHint.classList.remove('visible');
-  document.getElementById('successScreen').classList.add('active');
-  launchImagePetals();
+  // Flash gj image then show success
+  flashImage(gjImg);
+  setTimeout(() => {
+    document.getElementById('successScreen').classList.add('active');
+    launchImagePetals();
+  }, 230);
 }
 
 /* ── IMAGE PETAL RAIN ──────────────────────────────────────────────────── */
@@ -1261,6 +1341,89 @@ for (let i = 0; i < 10; i++) {
   b.style.cssText = `width:${size}px;height:${size}px;left:${Math.random()*100}%;animation-duration:${10+Math.random()*14}s;animation-delay:${Math.random()*10}s`;
   bubblesEl.appendChild(b);
 }
+
+/* ── FULLSCREEN FLASH ──────────────────────────────────────────────────── */
+const flashOverlay = document.getElementById('flashOverlay');
+const fokiuImg  = 'assets/fokiu/fuck-you-sign-by-female-260nw-250662106-1.webp';
+const gjImg     = 'assets/gj/1000_F_538317554_VgoVYNRY2R3al1EF9YCFR50fPUD7er9u.jpg';
+
+function flashImage(src) {
+  flashOverlay.style.backgroundImage = `url("${src}")`;
+  flashOverlay.classList.remove('active');
+  void flashOverlay.offsetWidth; // reflow to restart animation
+  flashOverlay.classList.add('active');
+  setTimeout(() => flashOverlay.classList.remove('active'), 220);
+}
+
+// Random-interval fokiu flash while NO is moving
+let fokiuFlashTimer = null;
+function scheduleRandomFlash() {
+  if (fokiuFlashTimer) clearTimeout(fokiuFlashTimer);
+  const delay = 2000 + Math.random() * 8000; // 2–10s
+  fokiuFlashTimer = setTimeout(() => {
+    flashImage(fokiuImg);
+    scheduleRandomFlash(); // keep looping until stopRandomFlash() is called
+  }, delay);
+}
+function stopRandomFlash() {
+  if (fokiuFlashTimer) { clearTimeout(fokiuFlashTimer); fokiuFlashTimer = null; }
+}
+
+/* ── POWERUP BUBBLES ───────────────────────────────────────────────────── */
+let powerupInterval = null;
+
+function spawnPowerupBubble() {
+  if (!isMoving) return;
+  const el = document.createElement('div');
+  el.className = 'powerup-bubble';
+  const size = 80 + Math.random() * 30;
+  el.style.width  = size + 'px';
+  el.style.height = size + 'px';
+  el.style.left   = (5 + Math.random() * 85) + 'vw';
+  el.style.bottom = '-120px';
+  const dur = 5 + Math.random() * 3;
+  el.style.animationDuration = dur + 's';
+
+  el.innerHTML = `
+    <span class="bubble-icon">🫧</span>
+    <span class="bubble-text">¡PRESIÓNAME!</span>
+    <span class="bubble-sub">↓ velocidad<br>a la mitad</span>
+  `;
+
+  el.addEventListener('click',      popBubble);
+  el.addEventListener('touchstart', popBubble, { passive: true });
+
+  document.body.appendChild(el);
+  setTimeout(() => el.remove(), dur * 1000 + 300);
+}
+
+function popBubble(e) {
+  e.stopPropagation();
+  const el = e.currentTarget;
+  if (el.classList.contains('popped')) return;
+  el.classList.add('popped');
+  el.removeEventListener('click',      popBubble);
+  el.removeEventListener('touchstart', popBubble);
+
+  // Halve the speed (higher ms = slower)
+  moveSpeed = Math.min(moveSpeed * 2, 2400);
+  startAutonomousMove();
+
+  setTimeout(() => el.remove(), 300);
+}
+
+function startPowerupBubbles() {
+  if (powerupInterval) clearInterval(powerupInterval);
+  powerupInterval = setInterval(spawnPowerupBubble, 5000);
+  // spawn one immediately after a short delay
+  setTimeout(spawnPowerupBubble, 1500);
+}
+
+function stopPowerupBubbles() {
+  if (powerupInterval) { clearInterval(powerupInterval); powerupInterval = null; }
+  document.querySelectorAll('.powerup-bubble').forEach(b => b.remove());
+}
+
 </script>
 </body>
 </html>
