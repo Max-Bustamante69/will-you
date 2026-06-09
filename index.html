@@ -348,40 +348,6 @@ body::after {
 }
 @keyframes ticker { from{transform:translateX(0)} to{transform:translateX(-50%)} }
 
-/* ── MOBILE SLOW HINT — appears 5s after button starts moving ────────── */
-.hold-hint {
-  display:none; position:fixed; z-index:400;
-  flex-direction:column; align-items:center; gap:0.5rem;
-  top:12%; left:50%; transform:translateX(-50%);
-  pointer-events: none;
-}
-.hold-hint.visible {
-  display:flex;
-  animation:hintPop 0.5s cubic-bezier(0.34,1.56,0.64,1);
-}
-@keyframes hintPop {
-  from{transform:translateX(-50%) scale(0);opacity:0}
-  to{transform:translateX(-50%) scale(1);opacity:1}
-}
-.hold-circle {
-  font-size:2rem; pointer-events:none;
-  animation:pulseHint 0.8s ease-in-out infinite;
-}
-@keyframes pulseHint {
-  0%,100%{ transform:scale(1); }
-  50%    { transform:scale(1.2); }
-}
-.hold-label {
-  font-size:0.82rem; font-weight:700; color:white; letter-spacing:0.06em;
-  text-align:center; background:rgba(255,77,119,0.85);
-  padding:0.35rem 1.1rem; border-radius:50px;
-  box-shadow:0 4px 16px rgba(255,77,119,0.4); white-space:nowrap;
-}
-.hold-sublabel {
-  font-size:0.7rem; font-weight:600; color:rgba(255,255,255,0.85);
-  text-align:center; background:rgba(0,0,0,0.4);
-  padding:0.2rem 0.8rem; border-radius:50px; white-space:nowrap;
-}
 
 /* ── SUCCESS ──────────────────────────────────────────────────────────── */
 .success-screen {
@@ -704,10 +670,16 @@ body::after {
 /* ── HACKER SCREEN ────────────────────────────────────────────────────── */
 .hacker-screen {
   display:none; position:fixed; inset:0; background:#000;
-  z-index:200; flex-direction:column; align-items:center; justify-content:center;
-  gap:1rem; padding:1rem; overflow:hidden;
+  z-index:200; overflow:hidden;
 }
-.hacker-screen.active { display:flex; }
+.hacker-screen.active { display:block; }
+
+/* DVD bounce container — JS drives left/top */
+.hacker-inner {
+  position: absolute;
+  display: flex; flex-direction: column; align-items: center; gap: 1rem;
+  padding: 0.5rem;
+}
 
 /* Hide everything except hacker screen, NO button, and flash overlay when Lain is active */
 body:has(.hacker-screen.active) .main-wrapper,
@@ -715,7 +687,6 @@ body:has(.hacker-screen.active) .bg-deco,
 body:has(.hacker-screen.active) .bg-bubbles,
 body:has(.hacker-screen.active) .petals-layer,
 body:has(.hacker-screen.active) .sticker,
-body:has(.hacker-screen.active) .hold-hint,
 body:has(.hacker-screen.active) .powerup-bubble,
 body:has(.hacker-screen.active) #cursor-dot,
 body:has(.hacker-screen.active) #cursor-ring {
@@ -915,12 +886,6 @@ body:has(.hacker-screen.active) #cursor-ring {
   </div>
 </div>
 
-<!-- MOBILE SLOW HINT — auto-shows 5s after NO starts moving -->
-<div class="hold-hint" id="holdHint">
-  <div class="hold-circle" id="holdCircle">🐢</div>
-  <div class="hold-label">¡Se está cansando!</div>
-  <div class="hold-sublabel">corre más lento por un momento…</div>
-</div>
 
 <!-- SUCCESS -->
 <div class="success-screen" id="successScreen">
@@ -1006,6 +971,7 @@ body:has(.hacker-screen.active) #cursor-ring {
 
 <!-- HACKER -->
 <div class="hacker-screen" id="hackerScreen" data-level="1">
+<div class="hacker-inner" id="hackerInner">
   <pre>⠀⠀⠀⠀⠀⠀⠀⠄⣀⠢⢀⣤⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣄⠀⡔⢀⠂⡜⢭⢻⣍⢯⡻⣝⣿⣿⡿⣟⠂
 ⠀⠀⠀⠀⠀⠀⠀⠄⠀⣦⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⡔⡀⢂⠜⣪⢗⡾⣶⡽⣾⣟⣯⠛⠀⠀
 ⠀⠀⠀⠀⠀⠄⠀⠠⣶⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣔⠨⡸⡝⣯⣳⢏⣿⠳⠉⠀⢠⣬⡶
@@ -1040,6 +1006,7 @@ body:has(.hacker-screen.active) #cursor-ring {
 ⢣⠝⡢⢍⠱⢈⣂⣌⡤⠦⠶⠶⠞⠛⠋⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢰⣿⣿⣿⠛⠷⣭⣂⠌⢠⠓⡴⣻⣿⣿⣿⣿⣿⣿⣯⣿
 ⣇⢾⡱⠞⠈⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣸⣿⣿⡇⠀⠀⠀⠉⠛⠳⠿⣶⣽⣿⣿⣿⣿⣿⣿⣿⣿</pre>
   <div class="msg">congrats you hacker &lt;3</div>
+</div><!-- /.hacker-inner -->
 </div>
 
 <script>
@@ -1111,7 +1078,6 @@ function applyTint(level) {
 /* ── STATE ─────────────────────────────────────────────────────────────── */
 let noCount      = 0;
 let isMoving     = false;
-let holdActive   = false;
 let moveInterval = null;
 let moveSpeed    = 180; // ms between autonomous jumps — starts very fast
 
@@ -1215,7 +1181,6 @@ function sayNo() {
       // Mobile: start very fast autonomous movement
       moveSpeed = 180;
       startAutonomousMove();
-      scheduleHint();
     }
     // Start powerup bubbles + random flashes when movement begins
     startPowerupBubbles();
@@ -1225,7 +1190,6 @@ function sayNo() {
       // Each tap adds only 120ms — stays very hard to catch, max 1200ms
       moveSpeed = Math.min(moveSpeed + 120, 1200);
       startAutonomousMove();
-      resetHintTimer();
     } else {
       placeNoRandom();
     }
@@ -1234,7 +1198,9 @@ function sayNo() {
   if (isMoving && noCount > 3) {
     const pressesWhileMoving = noCount - 3;
     hackerScr.dataset.level = Math.min(pressesWhileMoving, 4);
+    const wasActive = hackerScr.classList.contains('active');
     hackerScr.classList.add('active');
+    if (!wasActive) startDvdBounce();
     return;
   }
 }
@@ -1242,11 +1208,9 @@ function sayNo() {
 /* ── SAY YES ───────────────────────────────────────────────────────────── */
 function sayYes() {
   stopAutonomousMove();
+  stopDvdBounce();
   stopRandomFlash();
   stopPowerupBubbles();
-  clearTimeout(hintTimer);
-  clearTimeout(hintHideTimer);
-  holdHint.classList.remove('visible');
   // Flash gj image then show success
   flashImage(gjImg);
   setTimeout(() => {
@@ -1286,36 +1250,6 @@ function launchImagePetals() {
   drop();
 }
 
-/* ── MOBILE HINT TIMER — shows after 5s of not catching button ──────────── */
-let hintTimer    = null;
-let hintHideTimer = null;
-
-function scheduleHint() {
-  if (!isTouch()) return;
-  clearTimeout(hintTimer);
-  hintTimer = setTimeout(() => {
-    // Temporarily slow the button way down for 3 seconds
-    const prevSpeed = moveSpeed;
-    moveSpeed = 1800;
-    startAutonomousMove();
-    holdHint.classList.add('visible');
-    hintHideTimer = setTimeout(() => {
-      holdHint.classList.remove('visible');
-      // Only restore speed if they haven't tapped (tapping also slows)
-      if (moveSpeed === 1800) {
-        moveSpeed = prevSpeed;
-        startAutonomousMove();
-      }
-    }, 3000);
-  }, 5000);
-}
-
-function resetHintTimer() {
-  clearTimeout(hintTimer);
-  clearTimeout(hintHideTimer);
-  holdHint.classList.remove('visible');
-  scheduleHint();
-}
 
 /* ── AMBIENT PETALS — slow, smooth, behind content ─────────────────────── */
 const petalsLayer = document.getElementById('petalsLayer');
@@ -1423,6 +1357,54 @@ function stopPowerupBubbles() {
   if (powerupInterval) { clearInterval(powerupInterval); powerupInterval = null; }
   document.querySelectorAll('.powerup-bubble').forEach(b => b.remove());
 }
+
+/* ── DVD BOUNCE (Lain hacker screen) ──────────────────────────────────── */
+let dvdRaf    = null;
+let dvdX      = 0, dvdY = 0;
+let dvdVX     = 2.2, dvdVY = 1.8; // pixels per frame
+
+function dvdTick() {
+  const inner  = document.getElementById('hackerInner');
+  const screen = document.getElementById('hackerScreen');
+  if (!inner || !screen) return;
+
+  const sw = screen.offsetWidth;
+  const sh = screen.offsetHeight;
+  const iw = inner.offsetWidth;
+  const ih = inner.offsetHeight;
+
+  dvdX += dvdVX;
+  dvdY += dvdVY;
+
+  if (dvdX <= 0)        { dvdX = 0;       dvdVX =  Math.abs(dvdVX); }
+  if (dvdX >= sw - iw)  { dvdX = sw - iw; dvdVX = -Math.abs(dvdVX); }
+  if (dvdY <= 0)        { dvdY = 0;       dvdVY =  Math.abs(dvdVY); }
+  if (dvdY >= sh - ih)  { dvdY = sh - ih; dvdVY = -Math.abs(dvdVY); }
+
+  inner.style.left = dvdX + 'px';
+  inner.style.top  = dvdY + 'px';
+
+  dvdRaf = requestAnimationFrame(dvdTick);
+}
+
+function startDvdBounce() {
+  if (dvdRaf) return;
+  // Start from a random position inside the screen
+  const inner  = document.getElementById('hackerInner');
+  const screen = document.getElementById('hackerScreen');
+  if (!inner || !screen) return;
+  dvdX  = Math.random() * Math.max(0, screen.offsetWidth  - inner.offsetWidth);
+  dvdY  = Math.random() * Math.max(0, screen.offsetHeight - inner.offsetHeight);
+  // Randomise direction each time
+  dvdVX = (Math.random() > 0.5 ? 1 : -1) * (1.8 + Math.random() * 1.2);
+  dvdVY = (Math.random() > 0.5 ? 1 : -1) * (1.4 + Math.random() * 1.0);
+  dvdTick();
+}
+
+function stopDvdBounce() {
+  if (dvdRaf) { cancelAnimationFrame(dvdRaf); dvdRaf = null; }
+}
+
 
 </script>
 </body>
