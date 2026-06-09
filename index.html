@@ -63,8 +63,21 @@ body {
   background: var(--cream);
   font-family: 'Nunito', sans-serif;
   color: var(--dark);
-  overflow: hidden;
-  transition: background 0.6s, color 0.6s;
+  overflow-x: hidden;
+  overflow-y: auto;
+  transition: background 0.8s, color 0.6s, filter 0.8s;
+  --horror-darkness: transparent;
+}
+
+/* Darkness vignette overlay */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: var(--horror-darkness, transparent);
+  pointer-events: none;
+  z-index: 1;
+  transition: background 1s;
 }
 
 /* ── STICKERS ──────────────────────────────────────────────────────────── */
@@ -289,11 +302,13 @@ body {
   z-index: 50;
   /* start offscreen so first transition animates nicely */
   left: -500px; top: -500px;
-  transition: left 0.55s cubic-bezier(0.45,0,0.55,1),
-              top  0.55s cubic-bezier(0.45,0,0.55,1),
+  transition: left 0.45s cubic-bezier(0.45,0,0.55,1),
+              top  0.45s cubic-bezier(0.45,0,0.55,1),
               color 0.4s, border-color 0.4s, background 0.4s, box-shadow 0.2s,
               opacity 0.3s;
   opacity: 0;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
 }
 .btn-no.ready {
   opacity: 1;
@@ -372,9 +387,10 @@ body {
 .success-screen {
   display:none; position:fixed; inset:0;
   background:linear-gradient(135deg,#ffe0ec,#ffb6cc,#ffdde8);
-  z-index:100; flex-direction:column; align-items:center; justify-content:center;
-  gap:1.2rem; padding:2rem 2rem 3rem; text-align:center;
-  overflow-y:auto;
+  z-index:100; flex-direction:column; align-items:center; justify-content:flex-start;
+  gap:0.9rem; padding:1.5rem 1rem 2rem; text-align:center;
+  overflow-y:auto; overflow-x:hidden;
+  box-sizing:border-box;
 }
 .success-screen.active { display:flex; }
 
@@ -675,15 +691,83 @@ body {
 }
 
 /* ── RESPONSIVE ───────────────────────────────────────────────────────── */
-@media (max-width:480px) {
-  .main-wrapper { padding:1rem 0.8rem; align-items:flex-start; padding-top:1.5rem; }
+@media (max-width:600px) {
   .sticker { display:none; }
-  .card { border-radius:24px; }
-  .card-header { padding:1.4rem 1.2rem; }
-  .card-body { padding:1.8rem 1.2rem 0; }
-  .btns { gap:0.7rem; }
-  .btn-yes,.btn-no { padding:0.75rem 1.6rem; font-size:0.95rem; }
-  .hacker-screen pre { font-size:clamp(2.5px,1.8vw,5px); }
+  .main-wrapper {
+    padding: 0.8rem;
+    align-items: flex-start;
+    padding-top: 1rem;
+    min-height: 100dvh;
+  }
+  .card {
+    border-radius: 20px;
+    max-width: 100%;
+  }
+  .card-header {
+    padding: 1.2rem 1rem;
+  }
+  .card-header h1 {
+    font-size: clamp(1.6rem, 7vw, 2.2rem);
+  }
+  .card-header p {
+    font-size: 0.78rem;
+  }
+  .card-body {
+    padding: 1.5rem 1rem 0;
+  }
+  .main-img {
+    width: clamp(110px, 28vw, 160px);
+    height: clamp(110px, 28vw, 160px);
+  }
+  .question {
+    font-size: clamp(0.88rem, 3.5vw, 1rem);
+    margin-bottom: 1rem;
+  }
+  .btns { gap: 0.5rem; }
+  .btn-yes { padding: 0.7rem 1.4rem; font-size: 0.9rem; }
+  .btn-no-ghost { padding: 0.7rem 1.4rem; font-size: 0.9rem; }
+  .btn-no { padding: 0.7rem 1.4rem !important; font-size: 0.9rem !important; }
+  .img-strip { gap: 0.5rem; padding: 0.8rem 0 0; }
+  .img-strip img { width: clamp(30px, 7vw, 44px); height: clamp(30px, 7vw, 44px); }
+  .ticker-wrap { border-radius: 0 0 20px 20px; }
+  .hacker-screen pre { font-size: clamp(2px, 1.6vw, 4px); }
+  .bg-deco img { display: none; }
+}
+
+@media (max-width:380px) {
+  .card-header h1 { font-size: 1.45rem; }
+  .btn-yes { padding: 0.65rem 1.1rem; font-size: 0.85rem; }
+  .btn-no { padding: 0.65rem 1.1rem !important; font-size: 0.85rem !important; }
+}
+
+/* ── SUCCESS SCREEN RESPONSIVE ──────────────────────────────────────── */
+@media (max-width:600px) {
+  .success-screen {
+    padding: 1rem 0.8rem 1.5rem;
+    gap: 0.7rem;
+    justify-content: flex-start;
+    padding-top: 1.2rem;
+  }
+  .confetti-text { font-size: clamp(1.8rem, 9vw, 3.5rem); }
+  .success-screen > img { width: min(180px, 55vw); border-radius: 14px; }
+  .success-msg { font-size: clamp(0.9rem, 3.5vw, 1.1rem); }
+  .success-screenshot { font-size: clamp(0.65rem, 2.5vw, 0.75rem); }
+
+  .ticket-wrapper {
+    width: min(340px, 96vw);
+    padding: 0 10px;
+  }
+  .ticket-top { padding: 1rem 1.2rem 0.9rem; }
+  .ticket-bottom { padding: 1rem 1.2rem 0.9rem; }
+  .ticket-title { font-size: clamp(1rem, 5vw, 1.3rem); }
+  .ticket-fields { gap: 0.4rem 0.7rem; }
+  .ticket-field value { font-size: clamp(0.58rem, 2.2vw, 0.7rem); }
+}
+
+@media (max-width:380px) {
+  .ticket-wrapper { width: 98vw; padding: 0 6px; }
+  .ticket-top { padding: 0.8rem 0.9rem 0.7rem; }
+  .ticket-bottom { padding: 0.8rem 0.9rem 0.7rem; }
 }
 </style>
 </head>
@@ -898,13 +982,26 @@ const creepyImgs = [
   "assets/creepy pasta/miffy miedo.jpg"
 ];
 
-/* ── COLOUR TINT ESCALATION ────────────────────────────────────────────── */
-// Each level shifts the card slightly more unsettling
+/* ── COLOUR TINT ESCALATION — pink → blood → pure horror ───────────────── */
 const tintLevels = [
-  { bg:'#fff9fb', card:'#ffffff', header:'linear-gradient(135deg,#ff85a1,#ff4d77)', ticker:'linear-gradient(135deg,#ffd6e3,#ffcad6)', noColor:'#ff85a1', noBorder:'#ffd6e3' },
-  { bg:'#fff2f5', card:'#fff5f7', header:'linear-gradient(135deg,#ff6b8a,#e8325a)', ticker:'linear-gradient(135deg,#ffbdcc,#ffadc0)', noColor:'#e8325a', noBorder:'#ffbdcc' },
-  { bg:'#ffe8ec', card:'#fff0f2', header:'linear-gradient(135deg,#e8325a,#c4143e)', ticker:'linear-gradient(135deg,#ffa0b4,#ff88a0)', noColor:'#c4143e', noBorder:'#ffa0b4' },
-  { bg:'#ffd6de', card:'#ffe8ec', header:'linear-gradient(135deg,#c4143e,#960030)', ticker:'linear-gradient(135deg,#ff7090,#ff507a)', noColor:'#960030', noBorder:'#ff7090' },
+  // 0 — original bubblegum pink
+  { bg:'#fff9fb', card:'#ffffff', header:'linear-gradient(135deg,#ff85a1,#ff4d77)', ticker:'linear-gradient(135deg,#ffd6e3,#ffcad6)', noColor:'#ff85a1', noBorder:'#ffd6e3', qColor:'', cardText:'', bodyFilter:'none', brightness:1 },
+  // 1 — deeper pink
+  { bg:'#fff2f5', card:'#fff5f7', header:'linear-gradient(135deg,#ff6b8a,#e8325a)', ticker:'linear-gradient(135deg,#ffbdcc,#ffadc0)', noColor:'#e8325a', noBorder:'#ffbdcc', qColor:'', cardText:'', bodyFilter:'saturate(1.2)', brightness:1 },
+  // 2 — hot red-pink
+  { bg:'#ffe8ec', card:'#fff0f2', header:'linear-gradient(135deg,#e8325a,#c4143e)', ticker:'linear-gradient(135deg,#ffa0b4,#ff88a0)', noColor:'#c4143e', noBorder:'#ffa0b4', qColor:'#9a0025', cardText:'', bodyFilter:'saturate(1.4) hue-rotate(-10deg)', brightness:0.95 },
+  // 3 — crimson
+  { bg:'#ffd6de', card:'#ffe8ec', header:'linear-gradient(135deg,#c4143e,#960030)', ticker:'linear-gradient(135deg,#ff7090,#ff507a)', noColor:'#960030', noBorder:'#ff7090', qColor:'#7a0020', cardText:'', bodyFilter:'saturate(1.5) hue-rotate(-20deg)', brightness:0.88 },
+  // 4 — dark wine / darkness begins
+  { bg:'#2a0010', card:'#3d0015', header:'linear-gradient(135deg,#7a001e,#4a0010)', ticker:'linear-gradient(135deg,#5a0018,#3d0010)', noColor:'#cc1133', noBorder:'#7a001e', qColor:'#ff4466', cardText:'#ffaacc', bodyFilter:'saturate(1.6) hue-rotate(-30deg) brightness(0.75)', brightness:0.75 },
+  // 5 — deep maroon on black
+  { bg:'#1a0008', card:'#250010', header:'linear-gradient(135deg,#600010,#3a0008)', ticker:'linear-gradient(135deg,#420010,#28000a)', noColor:'#dd1133', noBorder:'#600010', qColor:'#ff3355', cardText:'#ff99bb', bodyFilter:'saturate(1.2) hue-rotate(-40deg) brightness(0.55)', brightness:0.55 },
+  // 6 — blood on near-black
+  { bg:'#0f0003', card:'#180005', header:'linear-gradient(135deg,#4a0008,#280003)', ticker:'linear-gradient(135deg,#300008,#180003)', noColor:'#ff0022', noBorder:'#4a0008', qColor:'#ff2244', cardText:'#ff6688', bodyFilter:'saturate(0.9) hue-rotate(-50deg) brightness(0.4)', brightness:0.4 },
+  // 7 — pure horror: black/red/white
+  { bg:'#000000', card:'#0a0000', header:'linear-gradient(135deg,#2a0000,#0a0000)', ticker:'linear-gradient(135deg,#180000,#050000)', noColor:'#ff0000', noBorder:'#880000', qColor:'#ff0000', cardText:'#ffffff', bodyFilter:'saturate(0.6) brightness(0.3)', brightness:0.3 },
+  // 8 — maximum horror
+  { bg:'#000000', card:'#050000', header:'linear-gradient(135deg,#1a0000,#000000)', ticker:'linear-gradient(135deg,#100000,#000000)', noColor:'#ff0000', noBorder:'#550000', qColor:'#ff0000', cardText:'#ffffff', bodyFilter:'saturate(0.3) brightness(0.2)', brightness:0.2 },
 ];
 
 function applyTint(level) {
@@ -915,12 +1012,28 @@ function applyTint(level) {
   document.getElementById('tickerWrap').style.background = t.ticker;
   noBtn.style.color = t.noColor;
   noBtn.style.borderColor = t.noBorder;
+  if (t.qColor) qText.style.color = t.qColor;
+  // Apply filter to entire page (excluding the card UI itself for readability)
+  if (t.bodyFilter && t.bodyFilter !== 'none') {
+    document.body.style.filter = t.bodyFilter;
+  } else {
+    document.body.style.filter = '';
+  }
+  if (t.cardText) {
+    document.querySelectorAll('.card-body, .card-header h1, .card-header p, .ticker-track span').forEach(el => {
+      el.style.color = t.cardText;
+    });
+  }
+  // darkness vignette overlay
+  document.body.style.setProperty('--horror-darkness', t.brightness < 0.7 ? `rgba(0,0,0,${Math.min(0.6, (0.7 - t.brightness) * 1.2).toFixed(2)})` : 'transparent');
 }
 
 /* ── STATE ─────────────────────────────────────────────────────────────── */
-let noCount    = 0;
-let isMoving   = false;
-let holdActive = false;
+let noCount      = 0;
+let isMoving     = false;
+let holdActive   = false;
+let moveInterval = null;
+let moveSpeed    = 800; // ms between autonomous jumps (decreases = faster)
 
 const noBtn      = document.getElementById('noBtn');
 const mainImg    = document.getElementById('mainImg');
@@ -947,13 +1060,24 @@ document.addEventListener('mousemove', e => {
 
 /* ── NO BUTTON: position to match ghost, then go random ──────────────── */
 function placeNoRandom() {
-  const margin = 70;
+  const margin = isTouch() ? 20 : 70;
   const w = noBtn.offsetWidth  || 120;
   const h = noBtn.offsetHeight || 48;
-  const x = margin + Math.random() * (window.innerWidth  - w - margin * 2);
-  const y = margin + Math.random() * (window.innerHeight - h - margin * 2);
+  const maxX = window.innerWidth  - w - margin;
+  const maxY = window.innerHeight - h - margin;
+  const x = margin + Math.random() * Math.max(0, maxX - margin);
+  const y = margin + Math.random() * Math.max(0, maxY - margin);
   noBtn.style.left = x + 'px';
   noBtn.style.top  = y + 'px';
+}
+
+function startAutonomousMove() {
+  if (moveInterval) clearInterval(moveInterval);
+  moveInterval = setInterval(placeNoRandom, moveSpeed);
+}
+
+function stopAutonomousMove() {
+  if (moveInterval) { clearInterval(moveInterval); moveInterval = null; }
 }
 
 // On load: snap the NO button to exactly where the ghost placeholder sits
@@ -991,17 +1115,26 @@ function sayNo() {
   void mainImg.offsetWidth;
   mainImg.classList.add('bounce');
 
-  // Colour tint escalation
-  applyTint(Math.floor((noCount - 1) / 2));
+  // Colour tint escalation — 1 step per press
+  applyTint(noCount - 1);
 
-  // First 3 clicks: animate from ghost position to a random spot
-  // noCount >= 3 triggers moving; the SAME click also moves it
+  // Start moving at press 3
   if (noCount >= 3 && !isMoving) {
     isMoving = true;
-    placeNoRandom(); // smooth because transition is already set
-    if (isTouch()) holdHint.classList.add('visible');
-  } else if (isMoving) {
     placeNoRandom();
+    if (isTouch()) {
+      // Mobile: autonomous frantic movement
+      moveSpeed = 800;
+      startAutonomousMove();
+    }
+  } else if (isMoving) {
+    if (isTouch()) {
+      // Each tap slows it down (easier to catch), min 2500ms
+      moveSpeed = Math.min(moveSpeed + 350, 2500);
+      startAutonomousMove();
+    } else {
+      placeNoRandom();
+    }
   }
 
   if (isMoving && noCount > 3) {
@@ -1014,6 +1147,7 @@ function sayNo() {
 
 /* ── SAY YES ───────────────────────────────────────────────────────────── */
 function sayYes() {
+  stopAutonomousMove();
   document.getElementById('successScreen').classList.add('active');
   launchImagePetals();
 }
