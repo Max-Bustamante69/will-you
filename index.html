@@ -299,11 +299,11 @@ body::after {
   box-shadow:0 4px 0 var(--cotton);
   letter-spacing:0.03em;
   position: fixed;
-  z-index: 50;
+  z-index: 300;
   /* start offscreen so first transition animates nicely */
   left: -500px; top: -500px;
-  transition: left 0.45s cubic-bezier(0.45,0,0.55,1),
-              top  0.45s cubic-bezier(0.45,0,0.55,1),
+  transition: left 0.15s cubic-bezier(0.45,0,0.55,1),
+              top  0.15s cubic-bezier(0.45,0,0.55,1),
               color 0.4s, border-color 0.4s, background 0.4s, box-shadow 0.2s,
               opacity 0.3s;
   opacity: 0;
@@ -348,39 +348,39 @@ body::after {
 }
 @keyframes ticker { from{transform:translateX(0)} to{transform:translateX(-50%)} }
 
-/* ── MOBILE HOLD HINT ─────────────────────────────────────────────────── */
+/* ── MOBILE SLOW HINT — appears 5s after button starts moving ────────── */
 .hold-hint {
-  display:none; position:fixed; z-index:300;
-  flex-direction:column; align-items:center; gap:0.6rem;
-  bottom:14%; left:50%; transform:translateX(-50%);
+  display:none; position:fixed; z-index:400;
+  flex-direction:column; align-items:center; gap:0.5rem;
+  top:12%; left:50%; transform:translateX(-50%);
+  pointer-events: none;
 }
-.hold-hint.visible { display:flex; animation:hintPop 0.5s cubic-bezier(0.34,1.56,0.64,1); }
+.hold-hint.visible {
+  display:flex;
+  animation:hintPop 0.5s cubic-bezier(0.34,1.56,0.64,1);
+}
 @keyframes hintPop {
   from{transform:translateX(-50%) scale(0);opacity:0}
   to{transform:translateX(-50%) scale(1);opacity:1}
 }
 .hold-circle {
-  width:80px; height:80px; border-radius:50%;
-  background:radial-gradient(circle at 35% 35%, #ffcad6, #ff4d77);
-  border:4px solid white;
-  box-shadow: 0 0 0 5px rgba(255,77,119,0.25), 0 0 0 12px rgba(255,77,119,0.1), 0 6px 24px rgba(255,77,119,0.5);
-  display:flex; align-items:center; justify-content:center;
-  font-size:1.8rem; pointer-events:auto; cursor:none !important;
-  animation:pulseHint 1.2s ease-in-out infinite;
-  user-select:none; -webkit-user-select:none; touch-action:none;
+  font-size:2rem; pointer-events:none;
+  animation:pulseHint 0.8s ease-in-out infinite;
 }
 @keyframes pulseHint {
-  0%,100%{ box-shadow:0 0 0 5px rgba(255,77,119,0.25),0 0 0 12px rgba(255,77,119,0.1),0 6px 24px rgba(255,77,119,0.5); transform:scale(1); }
-  50%    { box-shadow:0 0 0 8px rgba(255,77,119,0.3), 0 0 0 20px rgba(255,77,119,0.08),0 6px 32px rgba(255,77,119,0.6); transform:scale(1.08); }
+  0%,100%{ transform:scale(1); }
+  50%    { transform:scale(1.2); }
 }
 .hold-label {
-  font-size:0.8rem; font-weight:700; color:var(--accent); letter-spacing:0.08em;
-  text-align:center; background:white; padding:0.3rem 1rem; border-radius:50px;
-  box-shadow:0 4px 16px rgba(255,77,119,0.25); pointer-events:none; white-space:nowrap;
+  font-size:0.82rem; font-weight:700; color:white; letter-spacing:0.06em;
+  text-align:center; background:rgba(255,77,119,0.85);
+  padding:0.35rem 1.1rem; border-radius:50px;
+  box-shadow:0 4px 16px rgba(255,77,119,0.4); white-space:nowrap;
 }
 .hold-sublabel {
-  font-size:0.7rem; font-weight:600; color:rgba(255,77,119,0.6);
-  text-align:center; pointer-events:none;
+  font-size:0.7rem; font-weight:600; color:rgba(255,255,255,0.85);
+  text-align:center; background:rgba(0,0,0,0.4);
+  padding:0.2rem 0.8rem; border-radius:50px; white-space:nowrap;
 }
 
 /* ── SUCCESS ──────────────────────────────────────────────────────────── */
@@ -640,10 +640,22 @@ body::after {
 /* ── HACKER SCREEN ────────────────────────────────────────────────────── */
 .hacker-screen {
   display:none; position:fixed; inset:0; background:#000;
-  z-index:100; flex-direction:column; align-items:center; justify-content:center;
+  z-index:200; flex-direction:column; align-items:center; justify-content:center;
   gap:1rem; padding:1rem; overflow:hidden;
 }
 .hacker-screen.active { display:flex; }
+
+/* Hide everything except hacker screen and the NO button when Lain is active */
+body:has(.hacker-screen.active) .main-wrapper,
+body:has(.hacker-screen.active) .bg-deco,
+body:has(.hacker-screen.active) .bg-bubbles,
+body:has(.hacker-screen.active) .petals-layer,
+body:has(.hacker-screen.active) .sticker,
+body:has(.hacker-screen.active) .hold-hint,
+body:has(.hacker-screen.active) #cursor-dot,
+body:has(.hacker-screen.active) #cursor-ring {
+  display: none !important;
+}
 
 .hacker-screen[data-level="1"] pre,
 .hacker-screen[data-level="1"] .msg { animation:strobe1 0.6s steps(1) infinite; }
@@ -838,11 +850,11 @@ body::after {
   </div>
 </div>
 
-<!-- MOBILE HOLD HINT -->
+<!-- MOBILE SLOW HINT — auto-shows 5s after NO starts moving -->
 <div class="hold-hint" id="holdHint">
-  <div class="hold-circle" id="holdCircle">🎀</div>
-  <div class="hold-label">¡Mantén presionado aquí!</div>
-  <div class="hold-sublabel">…y luego toca el botón "No"</div>
+  <div class="hold-circle" id="holdCircle">🐢</div>
+  <div class="hold-label">¡Se está cansando!</div>
+  <div class="hold-sublabel">corre más lento por un momento…</div>
 </div>
 
 <!-- SUCCESS -->
@@ -1033,7 +1045,7 @@ let noCount      = 0;
 let isMoving     = false;
 let holdActive   = false;
 let moveInterval = null;
-let moveSpeed    = 800; // ms between autonomous jumps (decreases = faster)
+let moveSpeed    = 180; // ms between autonomous jumps — starts very fast
 
 const noBtn      = document.getElementById('noBtn');
 const mainImg    = document.getElementById('mainImg');
@@ -1073,6 +1085,9 @@ function placeNoRandom() {
 
 function startAutonomousMove() {
   if (moveInterval) clearInterval(moveInterval);
+  // Sync CSS transition to interval speed so button always reaches destination
+  const transSec = Math.max(0.1, (moveSpeed * 0.85) / 1000).toFixed(2);
+  noBtn.style.transition = `left ${transSec}s cubic-bezier(0.45,0,0.55,1), top ${transSec}s cubic-bezier(0.45,0,0.55,1), color 0.4s, border-color 0.4s, background 0.4s, box-shadow 0.2s, opacity 0.3s`;
   moveInterval = setInterval(placeNoRandom, moveSpeed);
 }
 
@@ -1098,9 +1113,12 @@ function snapNoToGhost() {
 // Run after fonts/layout settle
 requestAnimationFrame(() => requestAnimationFrame(snapNoToGhost));
 
-// Desktop: flee on hover
+// Desktop: flee on hover — restore smooth transition first
 noBtn.addEventListener('mouseover', () => {
-  if (isMoving && !isTouch()) placeNoRandom();
+  if (isMoving && !isTouch()) {
+    noBtn.style.transition = 'left 0.45s cubic-bezier(0.45,0,0.55,1), top 0.45s cubic-bezier(0.45,0,0.55,1), color 0.4s, border-color 0.4s, background 0.4s, box-shadow 0.2s, opacity 0.3s';
+    placeNoRandom();
+  }
 });
 
 /* ── SAY NO ────────────────────────────────────────────────────────────── */
@@ -1123,15 +1141,17 @@ function sayNo() {
     isMoving = true;
     placeNoRandom();
     if (isTouch()) {
-      // Mobile: autonomous frantic movement
-      moveSpeed = 800;
+      // Mobile: start very fast autonomous movement
+      moveSpeed = 180;
       startAutonomousMove();
+      scheduleHint();
     }
   } else if (isMoving) {
     if (isTouch()) {
-      // Each tap slows it down (easier to catch), min 2500ms
-      moveSpeed = Math.min(moveSpeed + 350, 2500);
+      // Each tap adds only 120ms — stays very hard to catch, max 1200ms
+      moveSpeed = Math.min(moveSpeed + 120, 1200);
       startAutonomousMove();
+      resetHintTimer();
     } else {
       placeNoRandom();
     }
@@ -1148,6 +1168,9 @@ function sayNo() {
 /* ── SAY YES ───────────────────────────────────────────────────────────── */
 function sayYes() {
   stopAutonomousMove();
+  clearTimeout(hintTimer);
+  clearTimeout(hintHideTimer);
+  holdHint.classList.remove('visible');
   document.getElementById('successScreen').classList.add('active');
   launchImagePetals();
 }
@@ -1183,27 +1206,36 @@ function launchImagePetals() {
   drop();
 }
 
-/* ── MOBILE HOLD-TO-FREEZE ─────────────────────────────────────────────── */
-function startHold(e) {
-  e.preventDefault();
-  holdActive = true;
-  noBtn.classList.add('frozen');
-  const cx = window.innerWidth  / 2 - 60 + (Math.random() - 0.5) * 80;
-  const cy = window.innerHeight * 0.35   + (Math.random() - 0.5) * 60;
-  noBtn.style.left = cx + 'px';
-  noBtn.style.top  = cy + 'px';
+/* ── MOBILE HINT TIMER — shows after 5s of not catching button ──────────── */
+let hintTimer    = null;
+let hintHideTimer = null;
+
+function scheduleHint() {
+  if (!isTouch()) return;
+  clearTimeout(hintTimer);
+  hintTimer = setTimeout(() => {
+    // Temporarily slow the button way down for 3 seconds
+    const prevSpeed = moveSpeed;
+    moveSpeed = 1800;
+    startAutonomousMove();
+    holdHint.classList.add('visible');
+    hintHideTimer = setTimeout(() => {
+      holdHint.classList.remove('visible');
+      // Only restore speed if they haven't tapped (tapping also slows)
+      if (moveSpeed === 1800) {
+        moveSpeed = prevSpeed;
+        startAutonomousMove();
+      }
+    }, 3000);
+  }, 5000);
 }
-function endHold() {
-  if (!holdActive) return;
-  holdActive = false;
-  noBtn.classList.remove('frozen');
+
+function resetHintTimer() {
+  clearTimeout(hintTimer);
+  clearTimeout(hintHideTimer);
+  holdHint.classList.remove('visible');
+  scheduleHint();
 }
-holdCircle.addEventListener('touchstart',  startHold, { passive:false });
-holdCircle.addEventListener('mousedown',   startHold);
-holdCircle.addEventListener('touchend',    endHold);
-holdCircle.addEventListener('touchcancel', endHold);
-holdCircle.addEventListener('mouseup',     endHold);
-holdCircle.addEventListener('mouseleave',  endHold);
 
 /* ── AMBIENT PETALS — slow, smooth, behind content ─────────────────────── */
 const petalsLayer = document.getElementById('petalsLayer');
